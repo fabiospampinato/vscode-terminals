@@ -1,7 +1,7 @@
 # VSC Terminals
 
 <p align="center">
-	<img src="resources/logo-128x128.png" alt="Logo">
+	<img src="https://raw.githubusercontent.com/fabiospampinato/vscode-terminals/master/resources/logo-128x128.png" alt="Logo">
 </p>
 
 An extension for setting-up multiple terminals at once, or just running some commands.
