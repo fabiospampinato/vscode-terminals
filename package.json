@@ -55,6 +55,10 @@
         "title": "Terminals: Edit configuration"
       },
       {
+        "command": "terminals.kill",
+        "title": "Terminals: Kill"
+      },
+      {
         "command": "terminals.runTerminals",
         "title": "Terminals: Run"
       },

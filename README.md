@@ -24,6 +24,7 @@ It adds 3 new commands to the command palette:
 
 ```js
 Terminals: Edit configuration // Open the configuration file, it will create it for you if needed
+Terminals: Kill // Kill all the terminals
 Terminals: Run // Run all the terminals
 Terminals: Run single // Select a single terminal to run
 ```

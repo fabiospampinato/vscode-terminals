@@ -107,6 +107,16 @@ async function editConfig () {
 
 }
 
+async function kill () {
+
+  for ( let i = 0, l = 25; i < l; i++ ) {
+
+    vscode.commands.executeCommand ( 'workbench.action.terminal.kill' );
+
+  }
+
+}
+
 /* EXPORT */
 
-export {runTerminals, runTerminal, initConfig, editConfig };
+export {runTerminals, runTerminal, initConfig, editConfig, kill};
