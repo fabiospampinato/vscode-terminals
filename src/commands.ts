@@ -63,6 +63,7 @@ async function initConfig () {
 
   const config = await Config.get ();
   const defaultConfig = {
+    autorun: false,
     terminals: [{
       name: 'Single',
       focus: true,

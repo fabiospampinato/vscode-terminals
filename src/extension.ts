@@ -1,11 +1,21 @@
 
 /* IMPORT */
 
+import {runTerminals} from './commands';
+import Config from './config';
 import Utils from './utils';
 
 /* ACTIVATE */
 
-const activate = Utils.initCommands;
+async function activate () {
+
+  Utils.initCommands ();
+
+  const config = await Config.get ();
+
+  if ( config.autorun ) runTerminals ();
+
+}
 
 /* EXPORT */
 
