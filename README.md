@@ -36,23 +36,23 @@ The configuration is an object that looks like this:
 
 ```js
 {
-	"terminals": [ // Array of terminals to open
-		{ // An object describing a terminal, most entries are optional
-			"name": "My Terminal", // The name of the terminal, it will be displayed in the dropdown
-			"command": "whoami", // Single command to run
-			"commands": [ // Multiple commands to run
-				"cd to/my/chest",
-				"touch my_heart"
-			],
-			"open": true, // Open the terminal after running its commands
-			"focus": true, // Open the terminal and focus to it
-			"onlySingle": true, // Don't run this with the `Terminals: run` command
-			"execute": false, // Write the last command without executing it
-			"shellPath": '/bin/bash', // Path to a custom shell executable
-			"shellArgs": ["--foo"] // Arguments to pass to the shell executable
-		},
-		{...} // Another terminal, same as above
-	]
+  "terminals": [ // Array of terminals to open
+    { // An object describing a terminal, most entries are optional
+      "name": "My Terminal", // The name of the terminal, it will be displayed in the dropdown
+      "command": "whoami", // Single command to run
+      "commands": [ // Multiple commands to run
+        "cd to/my/chest",
+        "touch my_heart"
+      ],
+      "open": true, // Open the terminal after running its commands
+      "focus": true, // Open the terminal and focus to it
+      "onlySingle": true, // Don't run this with the `Terminals: run` command
+      "execute": false, // Write the last command without executing it
+      "shellPath": '/bin/bash', // Path to a custom shell executable
+      "shellArgs": ["--foo"] // Arguments to pass to the shell executable
+    },
+    {...} // Another terminal, same as above
+  ]
 }
 ```
 
