@@ -32,11 +32,12 @@ async function runTerminals () {
 
 async function runTerminal () {
 
-  const config = await Config.get ();
+  const config = await Config.get (),
+        terminals = config.terminals.filter ( terminal => terminal.onlyMultiple !== true );
 
-  if ( !config.terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
+  if ( !terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
 
-  const names = config.terminals.map ( ({ name }) => name );
+  const names = terminals.map ( ({ name }) => name );
 
   const selected = vscode.window.showQuickPick ( names, { placeHolder: 'Select a terminal...' } );
 
@@ -44,7 +45,7 @@ async function runTerminal () {
 
     if ( !selectedName ) return;
 
-    const terminal = config.terminals.find ( ({ name }) => name === selectedName );
+    const terminal = terminals.find ( ({ name }) => name === selectedName );
 
     if ( !terminal ) return;
 
