@@ -1,0 +1,112 @@
+
+/* IMPORT */
+
+import * as _ from 'lodash';
+import * as vscode from 'vscode';
+import Config from './config';
+import run from './run';
+import Utils from './utils';
+
+/* COMMANDS */
+
+async function runTerminals () {
+
+  const config = await Config.get (),
+        terminals = config.terminals.filter ( terminal => terminal.onlySingle !== true );
+
+  if ( !terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
+
+  const terms = await Promise.all ( terminals.map ( run ) ),
+        openTermIndex = terminals.findIndex ( ({ open, focus }) => open || focus );
+
+  if ( openTermIndex >= 0 ) {
+
+    const openTerm = terms[openTermIndex] as vscode.Terminal,
+          openConfig = terminals[openTermIndex];
+
+    openTerm.show ( !openConfig.focus );
+
+  }
+
+}
+
+async function runTerminal () {
+
+  const config = await Config.get ();
+
+  if ( !config.terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
+
+  const names = config.terminals.map ( ({ name }) => name );
+
+  const selected = vscode.window.showQuickPick ( names, { placeHolder: 'Select a terminal...' } );
+
+  selected.then ( async selectedName => {
+
+    if ( !selectedName ) return;
+
+    const terminal = config.terminals.find ( ({ name }) => name === selectedName );
+
+    if ( !terminal ) return;
+
+    const term = await run ( terminal );
+
+    if ( !terminal.open && !terminal.focus ) return;
+
+    term.show ( !terminal.focus );
+
+  });
+
+}
+
+async function initConfig () {
+
+  const config = await Config.get ();
+  const defaultConfig = {
+    terminals: [{
+      name: 'Single',
+      focus: true,
+      command: "echo 'Hello World!'"
+    }, {
+      name: 'Multi',
+      commands: [
+        "echo 'Did you know?'",
+        "echo 'You can execute multiple commands!'"
+      ]
+    }, {
+      name: 'Single - No execution',
+      execute: false,
+      command: "Press enter to run me",
+    }, {
+      name: 'Multi - No execution',
+      execute: false,
+      commands: [
+        "echo 'Only the last command won't be executed'",
+        "Press enter to run me"
+      ]
+    }, {
+      name: "Only Single",
+      open: true,
+      onlySingle: true,
+      command: "echo 'I will not run with the others'"
+    }]
+  };
+  const content = JSON.stringify ( defaultConfig, undefined, 2 );
+
+  return Utils.file.make ( config.configPath, content );
+
+}
+
+async function editConfig () {
+
+  const config = await Config.get (),
+        hasFile = !!( await Utils.file.read ( config.configPath ) );
+
+  if ( !hasFile ) await initConfig ();
+
+  return Utils.file.open ( config.configPath );
+
+}
+
+/* EXPORT */
+
+export {runTerminals, runTerminal, initConfig, editConfig };
