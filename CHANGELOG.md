@@ -10,5 +10,5 @@
 - Added an `autorun` option
 - Added this changelog
 
-### Version 1.00
+### Version 1.0.0
 - Initial release
