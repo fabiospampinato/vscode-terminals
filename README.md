@@ -26,7 +26,7 @@ It adds 3 new commands to the command palette:
 Terminals: Edit configuration // Open the configuration file, it will create it for you if needed
 Terminals: Kill // Kill all the terminals
 Terminals: Run // Run all the terminals
-Terminals: Run single // Select a single terminal to run
+Terminals: Run single // Select a single terminal to run (cmd+alt+p on Mac, ctrl+alt+p Elsewhere)
 ```
 
 ## Configuration

@@ -1,3 +1,6 @@
+### Version 1.0.5
+- Assigned cmd-alt-p (Mac) or ctrl-alt-p (Elsewhere) to `Terminals: Run single`
+
 ### Version 1.0.4
 - Added an `icon` option
 
