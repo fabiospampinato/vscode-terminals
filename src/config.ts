@@ -25,7 +25,9 @@ const Config = {
 
     const config = vscode.workspace.getConfiguration ().get ( extension );
 
-    return _.omitBy ( config, _.isEmpty );
+    if ( !config['configPath'] ) delete config['configPath'];
+
+    return config;
 
   },
 
