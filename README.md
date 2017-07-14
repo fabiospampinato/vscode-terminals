@@ -41,6 +41,7 @@ The configuration is an object that looks like this:
   "terminals": [ // Array of terminals to open
     { // An object describing a terminal, most entries are optional
       "name": "My Terminal", // The name of the terminal, it will be displayed in the dropdown
+      "icon": "code", // An icon to show next to the name
       "command": "whoami", // Single command to run
       "commands": [ // Multiple commands to run
         "cd to/my/chest",

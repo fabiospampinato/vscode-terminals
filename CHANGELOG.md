@@ -1,3 +1,6 @@
+### Version 1.0.4
+- Added an `icon` option
+
 ### Version 1.0.3
 - Added a `Terminals: Kill` command
 - Added an `onlyMultiple` option
