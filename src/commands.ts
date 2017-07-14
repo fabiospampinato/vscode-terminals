@@ -35,7 +35,7 @@ async function runTerminal () {
   const config = await Config.get (),
         terminals = config.terminals.filter ( terminal => terminal.onlyMultiple !== true );
 
-  if ( !terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
+  if ( !terminals.length ) return vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
 
   const items = terminals.map ( ({ name, icon }) => icon ? `$(${icon}) ${name}` : name );
 

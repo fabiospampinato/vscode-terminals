@@ -1,3 +1,7 @@
+### Version 1.0.6
+- Fixed a bug
+- Fixed a typo
+
 ### Version 1.0.5
 - Assigned cmd-alt-p (Mac) or ctrl-alt-p (Elsewhere) to `Terminals: Run single`
 
