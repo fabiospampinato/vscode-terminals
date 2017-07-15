@@ -103,6 +103,10 @@ async function initConfig () {
 
 async function editConfig () {
 
+  const {rootPath} = vscode.workspace;
+
+  if ( !rootPath ) return vscode.window.showErrorMessage ( 'You have to open a project before being able to edit its configuration' );
+
   const config = await Config.get (),
         hasFile = !!( await Utils.file.read ( config.configPath ) );
 

@@ -1,4 +1,7 @@
-### Vrrsion 1.0.7
+### Version 1.0.8
+- Catching an error
+
+### Version 1.0.7
 - Improved initialization logic
 
 ### Version 1.0.6
