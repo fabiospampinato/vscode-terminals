@@ -3,7 +3,7 @@
   "displayName": "Terminals",
   "description": "An extension for setting-up multiple terminals at once, or just running some commands",
   "icon": "resources/logo-128x128.png",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "license": "MIT",
   "main": "out/src/extension.js",
   "publisher": "fabiospampinato",
@@ -22,14 +22,10 @@
     "vscode": "^1.10.0"
   },
   "keywords": [
-    "vscode",
-    "vsc",
-    "extension",
     "terminals",
     "terminal",
     "organizer",
     "setup",
-    "runner",
     "command"
   ],
   "categories": [

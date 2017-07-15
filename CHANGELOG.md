@@ -1,3 +1,6 @@
+### Vrrsion 1.0.7
+- Improved initialization logic
+
 ### Version 1.0.6
 - Fixed a bug
 - Fixed a typo

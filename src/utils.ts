@@ -13,16 +13,17 @@ import * as Commands from './commands';
 
 const Utils = {
 
-  initCommands () {
+  initCommands ( context: vscode.ExtensionContext ) {
 
     const {commands} = vscode.extensions.getExtension ( 'fabiospampinato.vscode-terminals' ).packageJSON.contributes;
 
     commands.forEach ( ({ command, title }) => {
 
       const commandName = _.last ( command.split ( '.' ) ) as string,
-            handler = Commands[commandName];
+            handler = Commands[commandName],
+            disposable = vscode.commands.registerCommand ( command, () => handler () );
 
-      vscode.commands.registerCommand ( command, handler );
+      context.subscriptions.push ( disposable );
 
     });
 
