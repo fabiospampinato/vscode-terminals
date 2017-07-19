@@ -3,6 +3,8 @@
 .vscode-test/**
 .vscode/**
 out/test/**
+resources/*.gif
+resources/*.psd
 src/**
 test/**
 tsconfig.json
