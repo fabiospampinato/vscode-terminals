@@ -39,9 +39,22 @@ const Utils = {
 
   file: {
 
-    open ( filepath ) {
+    open ( filepath, isTextDocument = true ) {
 
-      return vscode.commands.executeCommand ( 'vscode.open', vscode.Uri.parse ( `file://${filepath}` ) );
+      filepath = path.normalize ( filepath );
+
+      const fileuri = vscode.Uri.file ( filepath );
+
+      if ( isTextDocument ) {
+
+        return vscode.workspace.openTextDocument ( fileuri )
+                               .then ( vscode.window.showTextDocument );
+
+      } else {
+
+        return vscode.commands.executeCommand ( 'vscode.open', fileuri );
+
+      }
 
     },
 

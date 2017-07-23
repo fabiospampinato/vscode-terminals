@@ -1,3 +1,6 @@
+### Version 1.0.10
+- Improved Windows support
+
 ### Version 1.0.9
 - Renamed some commands
 
