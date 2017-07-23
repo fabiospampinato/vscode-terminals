@@ -1,3 +1,6 @@
+### Version 1.0.9
+- Renamed some commands
+
 ### Version 1.0.8
 - Catching an error
 
@@ -9,7 +12,7 @@
 - Fixed a typo
 
 ### Version 1.0.5
-- Assigned cmd-alt-p (Mac) or ctrl-alt-p (Elsewhere) to `Terminals: Run single`
+- Assigned cmd-alt-p (Mac) or ctrl-alt-p (Elsewhere) to `Terminals: Run Single`
 
 ### Version 1.0.4
 - Added an `icon` option

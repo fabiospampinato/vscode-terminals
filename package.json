@@ -3,7 +3,7 @@
   "displayName": "Terminals",
   "description": "An extension for setting-up multiple terminals at once, or just running some commands",
   "icon": "resources/logo-128x128.png",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "license": "MIT",
   "main": "out/src/extension.js",
   "publisher": "fabiospampinato",
@@ -48,7 +48,7 @@
     "commands": [
       {
         "command": "terminals.editConfig",
-        "title": "Terminals: Edit configuration"
+        "title": "Terminals: Edit Configuration"
       },
       {
         "command": "terminals.kill",
@@ -60,7 +60,7 @@
       },
       {
         "command": "terminals.runTerminal",
-        "title": "Terminals: Run single"
+        "title": "Terminals: Run Single"
       }
     ],
     "keybindings": [

@@ -20,18 +20,18 @@ ext install vscode-terminals
 
 ## Usage
 
-It adds 3 new commands to the command palette:
+It adds 4 new commands to the command palette:
 
 ```js
-Terminals: Edit configuration // Open the configuration file, it will create it for you if needed
+Terminals: Edit Configuration // Open the configuration file, it will create it for you if needed
 Terminals: Kill // Kill all the terminals
 Terminals: Run // Run all the terminals
-Terminals: Run single // Select a single terminal to run (cmd+alt+t on Mac, ctrl+alt+t Elsewhere)
+Terminals: Run Single // Select a single terminal to run (cmd+alt+t on Mac, ctrl+alt+t Elsewhere)
 ```
 
 ## Configuration
 
-Run the `Terminals: Edit configuration` command to create the configuration file. By default it uses a file named `terminals.json` under the `.vscode` directory, you can change this by supplying a custom path using the `terminals.configPath` setting entry.
+Run the `Terminals: Edit Configuration` command to create the configuration file. By default it uses a file named `terminals.json` under the `.vscode` directory, you can change this by supplying a custom path using the `terminals.configPath` setting entry.
 
 The configuration is an object that looks like this:
 
@@ -50,7 +50,7 @@ The configuration is an object that looks like this:
       "open": true, // Open the terminal after running its commands
       "focus": true, // Open the terminal and focus to it
       "onlySingle": true, // Don't run this with the `Terminals: Run` command
-      "onlyMultiple": true, // Make it unrunnable with the `Terminals: Run single` command
+      "onlyMultiple": true, // Make it unrunnable with the `Terminals: Run Single` command
       "execute": false, // Write the last command without executing it
       "shellPath": '/bin/bash', // Path to a custom shell executable
       "shellArgs": ["--foo"] // Arguments to pass to the shell executable
@@ -62,13 +62,13 @@ The configuration is an object that looks like this:
 
 ## Demo
 
-#### Edit configuration + Run:
+#### Edit Configuration + Run:
 
 ![Run](resources/run.gif)
 
-#### Run single
+#### Run Single
 
-![Run single](resources/run_single.gif)
+![Run Single](resources/run_single.gif)
 
 ## Hints
 
