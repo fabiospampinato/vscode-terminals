@@ -51,11 +51,11 @@ The configuration is an object that looks like this:
       "focus": true, // Open the terminal and focus to it
       "onlySingle": true, // Don't run this with the `Terminals: Run` command
       "onlyMultiple": true, // Make it unrunnable with the `Terminals: Run Single` command
+      "onlyAPI": true, // Don't run this with the `Terminals: Run` command and hide it from the `Terminals: Run Single` command
       "execute": false, // Write the last command without executing it
       "shellPath": '/bin/bash', // Path to a custom shell executable
       "shellArgs": ["--foo"] // Arguments to pass to the shell executable
-    },
-    {...} // Another terminal, same as above
+    }
   ]
 }
 ```

@@ -12,7 +12,7 @@ import Utils from './utils';
 async function runTerminals () {
 
   const config = await Config.get (),
-        terminals = config.terminals.filter ( terminal => terminal.onlySingle !== true );
+        terminals = config.terminals.filter ( terminal => terminal.onlyAPI !== true && terminal.onlySingle !== true );
 
   if ( !terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
 
@@ -33,7 +33,7 @@ async function runTerminals () {
 async function runTerminal () {
 
   const config = await Config.get (),
-        terminals = config.terminals.filter ( terminal => terminal.onlyMultiple !== true );
+        terminals = config.terminals.filter ( terminal => terminal.onlyAPI !== true && terminal.onlyMultiple !== true );
 
   if ( !terminals.length ) return vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
 
