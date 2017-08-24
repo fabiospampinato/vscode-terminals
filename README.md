@@ -72,6 +72,7 @@ The configuration is an object that looks like this:
 
 ## Hints
 
+- **[Commands](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-commands)**: Use this other extension, the `terminals.runByName` command and, optionally, the `onlyAPI` configuration option to create terminals that can be run with a click from the statusbar.
 - **Self-destroying terminals**: it's a common use case to run some commands and then close the terminal, to do this simply put a `logout` command at the end of your commands list.
 
 ## License
