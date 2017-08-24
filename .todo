@@ -4,4 +4,5 @@
   ☐ For running commands
 ☐ Restore terminals output
 ☐ Terminals groups
-☐ Maybe add support for statusbar tasks
+☐ Optional sorting by name/group
+☐ Add a `description` field

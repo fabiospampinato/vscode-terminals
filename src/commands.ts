@@ -48,17 +48,24 @@ async function runTerminal () {
     const parts = selectedName.match ( /\$\((\S+)\) (.*)/ ),
           name = parts ? parts[2] : selectedName;
 
-    const terminal = terminals.find ( terminal => terminal.name === name );
-
-    if ( !terminal ) return;
-
-    const term = await run ( terminal );
-
-    if ( !terminal.open && !terminal.focus ) return;
-
-    term.show ( !terminal.focus );
+    runTerminalByName ( name );
 
   });
+
+}
+
+async function runTerminalByName ( name ) {
+
+  const config = await Config.get (),
+        terminal = config.terminals.find ( terminal => terminal.name === name );
+
+  if ( !terminal ) return;
+
+  const term = await run ( terminal );
+
+  if ( !terminal.open && !terminal.focus ) return;
+
+  term.show ( !terminal.focus );
 
 }
 
@@ -128,4 +135,4 @@ async function kill () {
 
 /* EXPORT */
 
-export {runTerminals, runTerminal, initConfig, editConfig, kill};
+export {runTerminals, runTerminal, runTerminalByName, initConfig, editConfig, kill};

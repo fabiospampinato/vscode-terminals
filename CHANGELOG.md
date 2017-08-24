@@ -1,3 +1,7 @@
+### Version 1.1.0
+- Added `onlyAPI` option
+- Added `runTerminalByName` command
+
 ### Version 1.0.10
 - Improved Windows support
 

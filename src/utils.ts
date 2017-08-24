@@ -15,6 +15,8 @@ const Utils = {
 
   initCommands ( context: vscode.ExtensionContext ) {
 
+    /* CONTRIBUTIONS */
+
     const {commands} = vscode.extensions.getExtension ( 'fabiospampinato.vscode-terminals' ).packageJSON.contributes;
 
     commands.forEach ( ({ command, title }) => {
@@ -22,6 +24,18 @@ const Utils = {
       const commandName = _.last ( command.split ( '.' ) ) as string,
             handler = Commands[commandName],
             disposable = vscode.commands.registerCommand ( command, () => handler () );
+
+      context.subscriptions.push ( disposable );
+
+    });
+
+    /* HARD CODED */
+
+    ['terminals.runTerminalByName'].forEach ( command => {
+
+      const commandName = _.last ( command.split ( '.' ) ) as string,
+            handler = Commands[commandName],
+            disposable = vscode.commands.registerCommand ( command, handler );
 
       context.subscriptions.push ( disposable );
 
