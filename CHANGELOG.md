@@ -1,3 +1,7 @@
+### Version 1.1.1
+- Using JSON5 in order to be more human-friendly
+- Improved read of improperly formatted configurations
+
 ### Version 1.1.0
 - Added `onlyAPI` option
 - Added `runTerminalByName` command

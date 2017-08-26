@@ -2,6 +2,7 @@
 /* IMPORT */
 
 import * as _ from 'lodash';
+import * as JSON5 from 'json5';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import Utils from './utils';
@@ -33,13 +34,35 @@ const Config = {
 
   async getFile ( filepath ) {
 
-    const file = await Utils.file.read ( filepath );
+    const content = await Utils.file.read ( filepath );
 
-    if ( !file ) return;
+    if ( !content || !content.trim () ) return;
 
-    const config = _.attempt ( JSON.parse, file );
+    const config: any = _.attempt ( JSON5.parse, content );
 
-    if ( _.isError ( config ) ) return;
+    if ( _.isError ( config ) ) {
+
+      const option = await vscode.window.showErrorMessage ( '[Terminals] Your configuration file contains improperly formatted JSON', { title: 'Overwrite' }, { title: 'Edit' } );
+
+      if ( option && option.title === 'Overwrite' ) {
+
+        await Utils.file.write ( filepath, '{}' );
+
+        return {};
+
+      } else {
+
+        if ( option && option.title === 'Edit' ) {
+
+          Utils.file.open ( filepath );
+
+        }
+
+        throw new Error ( 'Can\'t read improperly formatted configuration file' );
+
+      }
+
+    }
 
     return config;
 
