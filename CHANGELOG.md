@@ -1,3 +1,6 @@
+### Version 1.2.0
+- Added support for descriptions
+
 ### Version 1.1.1
 - Using JSON5 in order to be more human-friendly
 - Improved read of improperly formatted configurations

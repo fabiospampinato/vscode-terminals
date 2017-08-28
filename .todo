@@ -1,11 +1,12 @@
 
+✔ Add a `description` field
+  ☐ Add a setting for showing the command (or commands) as the description
+    ☐ Maybe add support for showing both
 ☐ Add multi-root support
 ☐ Add support for keybindings
   ☐ For focusing to them as well as for running them
   ☐ For running commands
 ☐ Restore terminals output
 ☐ Terminals groups
-☐ Optional sorting by name/group
-☐ Add a `description` field
-  ☐ Add a setting for showing the command (or commands) as the description
-    ☐ Maybe add support for showing both
+  ☐ Add a sortByGroup option
+☐ Add a sortByName option

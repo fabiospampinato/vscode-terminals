@@ -143,11 +143,14 @@ const Utils = {
     makeQuickPickItem ( config, obj ) {
 
       const icon = obj.icon ? `$(${obj.icon}) ` : '',
-            name = `${icon}${obj.name}`;
+            name = `${icon}${obj.name}`,
+            description = config.showDescriptions  && obj.description,
+            bottomDetail = description;
 
       return {
         obj,
-        label: name
+        label: name,
+        detail: bottomDetail
       };
 
     }

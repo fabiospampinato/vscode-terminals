@@ -29,6 +29,14 @@ Terminals: Run // Run all the terminals
 Terminals: Run Single // Select a single terminal to run (cmd+alt+t on Mac, ctrl+alt+t Elsewhere)
 ```
 
+## Settings
+
+```js
+{
+  "projects.showDescriptions": true // Show terminals' descriptions in the quickpick
+}
+```
+
 ## Configuration
 
 Run the `Terminals: Edit Configuration` command to create the configuration file. By default it uses a file named `terminals.json` under the `.vscode` directory, you can change this by supplying a custom path using the `terminals.configPath` setting entry.
@@ -41,6 +49,7 @@ The configuration is an object that looks like this:
   "terminals": [ // Array of terminals to open
     { // An object describing a terminal, most entries are optional
       "name": "My Terminal", // The name of the terminal, it will be displayed in the dropdown
+      "description": "A terminal that runs some commands", // The description of the terminal
       "icon": "code", // An icon to show next to the name
       "command": "whoami", // Single command to run
       "commands": [ // Multiple commands to run

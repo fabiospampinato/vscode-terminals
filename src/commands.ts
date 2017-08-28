@@ -68,6 +68,7 @@ async function initConfig () {
     autorun: false,
     terminals: [{
       name: 'Single',
+      description: 'This is a description',
       focus: true,
       command: "echo 'Hello World!'"
     }, {
