@@ -37,20 +37,12 @@ async function runTerminal () {
 
   if ( !terminals.length ) return vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
 
-  const items = terminals.map ( ({ name, icon }) => icon ? `$(${icon}) ${name}` : name );
+  const {items} = Utils.ui.makeItems ( config, {terminals}, Utils.ui.makeQuickPickItem ),
+        selected = await vscode.window.showQuickPick ( items, { placeHolder: 'Select a terminal...' } );
 
-  const selected = vscode.window.showQuickPick ( items, { placeHolder: 'Select a terminal...' } );
+  if ( !selected ) return;
 
-  selected.then ( async selectedName => {
-
-    if ( !selectedName ) return;
-
-    const parts = selectedName.match ( /\$\((\S+)\) (.*)/ ),
-          name = parts ? parts[2] : selectedName;
-
-    runTerminalByName ( name );
-
-  });
+  runTerminalByName ( selected.obj.name );
 
 }
 

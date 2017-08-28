@@ -96,6 +96,62 @@ const Utils = {
 
     }
 
+  },
+
+  config: {
+
+    walkTerminals ( obj, terminalCallback ) {
+
+      if ( obj.terminals ) {
+
+        obj.terminals.forEach ( terminal => {
+
+          terminalCallback ( terminal, obj );
+
+        });
+
+      }
+
+    }
+
+  },
+
+  ui: {
+
+    makeItems ( config, obj, itemMaker: Function ) {
+
+      /* VARIABLES */
+
+      const items = [];
+
+      let terminalsNr = 0;
+
+      /* ITEMS */
+
+      Utils.config.walkTerminals ( obj, terminal => {
+
+        items.push ( itemMaker ( config, terminal ) );
+
+        terminalsNr++;
+
+      });
+
+      return {items, terminalsNr};
+
+    },
+
+    makeQuickPickItem ( config, obj ) {
+
+      const icon = obj.icon ? `$(${obj.icon}) ` : '',
+            name = `${icon}${obj.name}`;
+
+      return {
+        obj,
+        label: name
+      };
+
+    }
+
   }
 
 };

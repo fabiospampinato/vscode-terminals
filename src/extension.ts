@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import * as vscode from 'vscode';
-import {runTerminals} from './commands';
+import * as Commands from './commands';
 import Config from './config';
 import Utils from './utils';
 
@@ -14,7 +14,9 @@ async function activate ( context: vscode.ExtensionContext ) {
 
   const config = await Config.get ();
 
-  if ( config.autorun ) runTerminals ();
+  if ( config.autorun ) Commands.runTerminals ();
+
+  return Commands;
 
 }
 
