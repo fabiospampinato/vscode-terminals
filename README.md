@@ -48,9 +48,9 @@ The configuration is an object that looks like this:
         "touch my_heart"
       ],
       "open": true, // Open the terminal after running its commands
-      "focus": true, // Open the terminal and focus to it
+      "focus": true, // Open the terminal after running its commands and focus to it
       "onlySingle": true, // Don't run this with the `Terminals: Run` command
-      "onlyMultiple": true, // Make it unrunnable with the `Terminals: Run Single` command
+      "onlyMultiple": true, // Hide it from the `Terminals: Run Single` command
       "onlyAPI": true, // Don't run this with the `Terminals: Run` command and hide it from the `Terminals: Run Single` command
       "execute": false, // Write the last command without executing it
       "shellPath": '/bin/bash', // Path to a custom shell executable
