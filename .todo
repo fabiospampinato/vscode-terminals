@@ -5,5 +5,4 @@
   ☐ For running commands
 ☐ Restore terminals output
 ☐ Terminals groups
-  ☐ Add a sortByGroup option
-☐ Add a sortByName option
+  ☐ Add a sortGroups option

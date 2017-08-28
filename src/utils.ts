@@ -100,11 +100,13 @@ const Utils = {
 
   config: {
 
-    walkTerminals ( obj, terminalCallback ) {
+    walkTerminals ( obj, terminalCallback, sortTerminals ) {
 
       if ( obj.terminals ) {
 
-        obj.terminals.forEach ( terminal => {
+        const terminals = sortTerminals ? _.sortBy ( obj.terminals, terminal => terminal['name'].toLowerCase () ) : obj.terminals;
+
+        terminals.forEach ( terminal => {
 
           terminalCallback ( terminal, obj );
 
@@ -134,7 +136,7 @@ const Utils = {
 
         terminalsNr++;
 
-      });
+      }, config.sortTerminals );
 
       return {items, terminalsNr};
 

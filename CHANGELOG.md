@@ -1,3 +1,6 @@
+### Version 1.5.0
+- Added a `sortTerminals` option
+
 ### Version 1.4.0
 - Added support for inverting commands and description in the quickpick
 

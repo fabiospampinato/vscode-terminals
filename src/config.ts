@@ -24,7 +24,7 @@ const Config = {
 
   getExtension ( extension = 'terminals' ) {
 
-    const config = vscode.workspace.getConfiguration ().get ( extension );
+    const config = vscode.workspace.getConfiguration ().get ( extension ) as any;
 
     if ( !config['configPath'] ) delete config['configPath'];
 
