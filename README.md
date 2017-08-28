@@ -33,6 +33,7 @@ Terminals: Run Single // Select a single terminal to run (cmd+alt+t on Mac, ctrl
 
 ```js
 {
+  "terminals.invertCommandsAndDescription": false, // Invert a terminal commands and description in the quickpick
   "terminals.showCommands": false, // Show terminals' commands in the quickpick
   "terminals.showDescriptions": true // Show terminals' descriptions in the quickpick
 }

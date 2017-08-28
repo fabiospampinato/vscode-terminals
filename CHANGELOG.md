@@ -1,3 +1,6 @@
+### Version 1.4.0
+- Added support for inverting commands and description in the quickpick
+
 ### Version 1.3.0
 - Added support for showing commands in the quickpick
 

@@ -150,8 +150,8 @@ const Utils = {
       if ( obj.command ) commands.unshift ( obj.command );
 
       const commandsStr = config.showCommands ? commands.join ( ' && ' ) : '',
-            topDetail = commandsStr,
-            bottomDetail = description;
+            topDetail = config.invertCommandsAndDescription ? description : commandsStr,
+            bottomDetail = config.invertCommandsAndDescription ? commandsStr : description;
 
       return {
         obj,
