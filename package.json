@@ -3,7 +3,7 @@
   "displayName": "Terminals",
   "description": "An extension for setting-up multiple terminals at once, or just running some commands",
   "icon": "resources/logo-128x128.png",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "license": "MIT",
   "main": "out/src/extension.js",
   "publisher": "fabiospampinato",
@@ -39,6 +39,11 @@
       "type": "object",
       "title": "Terminals - Configuration",
       "properties": {
+        "terminals.showCommands": {
+          "type": "string",
+          "description": "Show terminals' commands in the quickpick",
+          "default": false
+        },
         "terminals.showDescriptions": {
           "type": "boolean",
           "description": "Show terminals' descriptions in the quickpick",

@@ -1,3 +1,6 @@
+### Version 1.3.0
+- Added support for showing commands in the quickpick
+
 ### Version 1.2.0
 - Added support for descriptions
 

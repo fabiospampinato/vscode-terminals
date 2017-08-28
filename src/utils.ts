@@ -144,12 +144,19 @@ const Utils = {
 
       const icon = obj.icon ? `$(${obj.icon}) ` : '',
             name = `${icon}${obj.name}`,
-            description = config.showDescriptions  && obj.description,
+            description = config.showDescriptions && obj.description,
+            commands =  _.castArray ( obj.commands || [] );
+
+      if ( obj.command ) commands.unshift ( obj.command );
+
+      const commandsStr = config.showCommands ? commands.join ( ' && ' ) : '',
+            topDetail = commandsStr,
             bottomDetail = description;
 
       return {
         obj,
         label: name,
+        description: topDetail,
         detail: bottomDetail
       };
 
