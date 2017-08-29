@@ -1,3 +1,6 @@
+### Version 1.5.1
+- Updated readme
+
 ### Version 1.5.0
 - Added a `sortTerminals` option
 
