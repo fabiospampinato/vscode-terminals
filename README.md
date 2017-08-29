@@ -26,7 +26,13 @@ It adds 4 new commands to the command palette:
 Terminals: Edit Configuration // Open the configuration file, it will create it for you if needed
 Terminals: Kill // Kill all the terminals
 Terminals: Run // Run all the terminals
-Terminals: Run Single // Select a single terminal to run (cmd+alt+t on Mac, ctrl+alt+t Elsewhere)
+Terminals: Run Single // Select a single terminal to run
+```
+
+It adds 1 shortcut:
+
+```js
+'Cmd/Ctrl+Alt+T' // Triggers `Terminals: Run Single`
 ```
 
 ## Settings

@@ -1,3 +1,6 @@
+### Version 1.5.2
+- Improved shortcuts documentation
+
 ### Version 1.5.1
 - Updated readme
 
