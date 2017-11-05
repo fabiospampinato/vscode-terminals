@@ -1,3 +1,6 @@
+### Version 1.5.3
+- Fixed support for global terminals
+
 ### Version 1.5.2
 - Improved shortcuts documentation
 
