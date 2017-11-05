@@ -43,6 +43,11 @@
           "type": "string",
           "description": "The location of the configuration file"
         },
+        "terminals.autorun": {
+          "type": "boolean",
+          "description": "Execute `Terminals: Run` automatically at startup",
+          "default": false
+        },
         "terminals.invertCommandsAndDescription": {
           "type": "boolean",
           "description": "Invert a terminal commands and description in the quickpick",
@@ -62,6 +67,11 @@
           "type": "boolean",
           "description": "Sort terminals alphabetically",
           "default": false
+        },
+        "terminals.terminals": {
+          "type": "array",
+          "description": "Array of terminals to open",
+          "default": []
         }
       }
     },
@@ -98,6 +108,7 @@
     "test": "node ./node_modules/vscode/bin/test"
   },
   "dependencies": {
+    "conf-merge": "^1.0.0",
     "json5": "^0.5.1",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",

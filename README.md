@@ -78,6 +78,8 @@ The configuration is an object that looks like this:
 }
 ```
 
+You can also define terminals in your Visual Studio Code settings file under the key `terminals.terminals`. This way you can have global terminals, which are always available, while still having the ability to add some project-specific terminals in your configuration file.
+
 ## Demo
 
 #### Edit Configuration + Run:

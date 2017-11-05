@@ -2,6 +2,7 @@
 /* IMPORT */
 
 import * as _ from 'lodash';
+import merge from 'conf-merge';
 import * as JSON5 from 'json5';
 import * as path from 'path';
 import * as vscode from 'vscode';
@@ -75,7 +76,7 @@ const Config = {
           configPath: string = extension.configPath || defaults.configPath,
           config = configPath && await Config.getFile ( configPath );
 
-    return _.merge ( {}, defaults, extension, config );
+    return merge ( {}, defaults, extension, config ) as any;
 
   }
 
