@@ -17,6 +17,8 @@ async function run ({ name, shellPath, shellArgs, execute, command, commands }) 
 
   const term = vscode.window.createTerminal ( name, shellPath, shellArgs );
 
+  term['__config'] = config;
+
   await term.processId;
   await Utils.delay ( 150 );
 

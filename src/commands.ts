@@ -17,16 +17,11 @@ async function runTerminals () {
   if ( !terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
 
   const terms = await Promise.all ( terminals.map ( run ) ),
-        openTermIndex = terminals.findIndex ( ({ open, focus }) => open || focus );
+        term = terms.find ( ({ __config }) => __config.open || __config.focus  ) as vscode.Terminal;
 
-  if ( openTermIndex >= 0 ) {
+  if ( !term ) return;
 
-    const openTerm = terms[openTermIndex] as vscode.Terminal,
-          openConfig = terminals[openTermIndex];
-
-    openTerm.show ( !openConfig.focus );
-
-  }
+  term.show ( !term['__config'].focus );
 
 }
 
