@@ -1,3 +1,7 @@
+### Version 1.6.0
+- Added a `recycle` and `target` option
+- Ensured the default configuration works on bash and zsh
+
 ### Version 1.5.3
 - Fixed support for global terminals
 
