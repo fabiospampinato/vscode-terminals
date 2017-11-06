@@ -65,6 +65,8 @@ The configuration is an object that looks like this:
         "cd to/my/chest",
         "touch my_heart"
       ],
+      "recycle": false, // Always create a new terminal
+      "target": "My Other Terminal",// Execute the commands in this terminal's instance
       "open": true, // Open the terminal after executing its commands
       "focus": true, // Open the terminal after executing its commands and focus to it
       "onlySingle": true, // Don't run this with the `Terminals: Run` command

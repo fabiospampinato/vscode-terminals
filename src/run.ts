@@ -5,9 +5,21 @@ import * as _ from 'lodash';
 import * as vscode from 'vscode';
 import Utils from './utils';
 
+/* CACHE */
+
+const cache = {};
+
+function onClose () {
+  vscode.window.onDidCloseTerminal ( term => delete cache[term.name] );
+}
+
+onClose ();
+
 /* RUN */
 
-async function run ({ name, shellPath, shellArgs, execute, command, commands }) {
+async function run ( config ) {
+
+  let {name, target, command, commands, execute, recycle, shellPath, shellArgs} = config;
 
   commands = _.isArray ( commands ) ? commands : [];
 
@@ -15,7 +27,11 @@ async function run ({ name, shellPath, shellArgs, execute, command, commands }) 
 
   if ( !commands.length ) return;
 
-  const term = vscode.window.createTerminal ( name, shellPath, shellArgs );
+  const cacheTarget = target || name,
+        cacheTerm = recycle !== false && cache[cacheTarget],
+        term = cacheTerm || vscode.window.createTerminal ( name, shellPath, shellArgs );
+
+  cache[cacheTarget] = term;
 
   term['__config'] = config;
 
