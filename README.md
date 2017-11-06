@@ -65,8 +65,8 @@ The configuration is an object that looks like this:
         "cd to/my/chest",
         "touch my_heart"
       ],
-      "open": true, // Open the terminal after running its commands
-      "focus": true, // Open the terminal after running its commands and focus to it
+      "open": true, // Open the terminal after executing its commands
+      "focus": true, // Open the terminal after executing its commands and focus to it
       "onlySingle": true, // Don't run this with the `Terminals: Run` command
       "onlyMultiple": true, // Hide it from the `Terminals: Run Single` command
       "onlyAPI": true, // Don't run this with the `Terminals: Run` command and hide it from the `Terminals: Run Single` command
