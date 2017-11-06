@@ -70,29 +70,29 @@ async function initConfig () {
       name: 'Single',
       description: 'This is a description',
       focus: true,
-      command: "echo 'Hello World!'"
+      command: 'echo "Hello World"'
     }, {
       name: 'Multi',
       commands: [
-        "echo 'Did you know?'",
-        "echo 'You can execute multiple commands!'"
+        'echo "Did you know?"',
+        'echo "You can execute multiple commands"'
       ]
     }, {
       name: 'Single - No execution',
       execute: false,
-      command: "Press enter to run me",
+      command: 'Press enter to run me',
     }, {
       name: 'Multi - No execution',
       execute: false,
       commands: [
-        "echo 'Only the last command won't be executed'",
-        "Press enter to run me"
+        'echo "Only the last command won\'t be executed"',
+        'Press enter to run me'
       ]
     }, {
-      name: "Only Single",
+      name: 'Only Single',
       open: true,
       onlySingle: true,
-      command: "echo 'I will not run with the others'"
+      command: 'echo "I will not run with the others"'
     }]
   };
   const content = JSON.stringify ( defaultConfig, undefined, 2 );
