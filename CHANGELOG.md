@@ -1,3 +1,6 @@
+### Version 1.6.1
+- Added support for virtual targets
+
 ### Version 1.6.0
 - Added a `recycle` and `target` option
 - Ensured the default configuration works on bash and zsh
