@@ -29,7 +29,7 @@ async function run ( config ) {
 
   const cacheTarget = target || name,
         cacheTerm = recycle !== false && cache[cacheTarget],
-        term = cacheTerm || vscode.window.createTerminal ( name, shellPath, shellArgs );
+        term = cacheTerm || vscode.window.createTerminal ( cacheTarget, shellPath, shellArgs );
 
   cache[cacheTarget] = term;
 
