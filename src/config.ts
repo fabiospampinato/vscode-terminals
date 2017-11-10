@@ -12,14 +12,14 @@ import Utils from './utils';
 
 const Config = {
 
-  getDefaults () {
+  getDefaults ( rootPath?: string ) {
 
-    const defaults: any = { terminals: [] },
-          rootPath = vscode.workspace.rootPath;
+    if ( !rootPath ) rootPath = Utils.folder.getActiveRootPath ();
 
-    if ( rootPath ) defaults.configPath = path.join ( rootPath, '.vscode', 'terminals.json' );
-
-    return defaults;
+    return {
+      configPath: rootPath ? path.join ( rootPath, '.vscode', 'terminals.json' ) : '',
+      terminals: []
+    };
 
   },
 
@@ -69,9 +69,9 @@ const Config = {
 
   },
 
-  async get () {
+  async get ( rootPath?: string ) {
 
-    const defaults = Config.getDefaults (),
+    const defaults = Config.getDefaults ( rootPath ),
           extension: any = Config.getExtension (),
           configPath: string = extension.configPath || defaults.configPath,
           config = configPath && await Config.getFile ( configPath );

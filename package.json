@@ -19,7 +19,7 @@
     "url": "https://github.com/fabiospampinato/vscode-terminals"
   },
   "engines": {
-    "vscode": "^1.10.0"
+    "vscode": "^1.15.0"
   },
   "keywords": [
     "terminals",
@@ -108,6 +108,7 @@
     "test": "node ./node_modules/vscode/bin/test"
   },
   "dependencies": {
+    "absolute": "0.0.1",
     "conf-merge": "^1.0.0",
     "json5": "^0.5.1",
     "lodash": "^4.17.4",
