@@ -30,6 +30,9 @@ async function activate ( context: vscode.ExtensionContext ) {
   Utils.initCommands ( context );
 
   autostartWorkspaceFolders ( vscode.workspace.workspaceFolders );
+  vscode.workspace.onDidChangeWorkspaceFolders ( ({ added }) => {
+    autostartWorkspaceFolders ( added );
+  });
 
   return Commands;
 
