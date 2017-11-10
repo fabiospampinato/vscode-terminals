@@ -6,15 +6,30 @@ import * as Commands from './commands';
 import Config from './config';
 import Utils from './utils';
 
+/* HELPERS */
+
+async function autostartWorkspaceFolders ( folders?: vscode.WorkspaceFolder[] ) {
+
+  if ( !folders ) return;
+
+  const rootPaths = folders.map ( folder => folder.uri.fsPath ),
+        configs = await Promise.all ( rootPaths.map ( rootPath => Config.get ( rootPath ) ) );
+
+  configs.forEach ( ( config, i ) => {
+    if ( config.autorun ) {
+      Commands.runTerminals ( rootPaths[i] );
+    }
+  });
+
+}
+
 /* ACTIVATE */
 
 async function activate ( context: vscode.ExtensionContext ) {
 
   Utils.initCommands ( context );
 
-  const config = await Config.get ();
-
-  if ( config.autorun ) Commands.runTerminals ();
+  autostartWorkspaceFolders ( vscode.workspace.workspaceFolders );
 
   return Commands;
 

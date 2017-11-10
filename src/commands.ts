@@ -9,9 +9,9 @@ import Utils from './utils';
 
 /* COMMANDS */
 
-async function runTerminals () {
+async function runTerminals ( rootPath?: string ) {
 
-  const config = await Config.get (),
+  const config = await Config.get ( rootPath ),
         terminals = config.terminals.filter ( terminal => terminal.onlyAPI !== true && terminal.onlySingle !== true );
 
   if ( !terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
