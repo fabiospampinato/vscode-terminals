@@ -1,8 +1,5 @@
 
-☐ Add multi-root support
-☐ Add support for keybindings
-  ☐ For focusing to them as well as for running them
-  ☐ For running commands
+☐ Multi-root: group terminals in a single quickpick
 ☐ Restore terminals output
 ☐ Terminals groups
   ☐ Add a sortGroups option

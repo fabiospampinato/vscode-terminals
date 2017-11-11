@@ -1,3 +1,6 @@
+### Version 1.7.0
+- Add multi-root support
+
 ### Version 1.6.1
 - Added support for virtual targets
 
