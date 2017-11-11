@@ -16,10 +16,9 @@ const Config = {
 
     if ( !rootPath ) rootPath = Utils.folder.getActiveRootPath ();
 
-    return {
-      configPath: rootPath ? path.join ( rootPath, '.vscode', 'terminals.json' ) : '',
-      terminals: []
-    };
+    const configPath = rootPath ? path.join ( rootPath, '.vscode', 'terminals.json' ) : '';
+
+    return {configPath};
 
   },
 

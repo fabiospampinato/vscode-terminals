@@ -16,12 +16,12 @@ async function runTerminals ( rootPath?: string ) {
 
   if ( !terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
 
-  const terms = await Promise.all ( terminals.map ( run ) ),
-        term = terms.find ( ({ __config }) => __config.open || __config.focus  ) as vscode.Terminal;
+  const terms = await Promise.all ( terminals.map ( terminal => run ( terminal, config ) ) ),
+        term = terms.find ( ({ __terminal }) => __terminal.open || __terminal.focus  ) as vscode.Terminal;
 
   if ( !term ) return;
 
-  term.show ( !term['__config'].focus );
+  term.show ( !term['__terminal'].focus );
 
 }
 
@@ -48,7 +48,7 @@ async function runTerminalByName ( name ) {
 
   if ( !terminal ) return;
 
-  const term = await run ( terminal );
+  const term = await run ( terminal, config );
 
   if ( !terminal.open && !terminal.focus ) return;
 

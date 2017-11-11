@@ -54,7 +54,8 @@ The configuration is an object that looks like this:
 
 ```js
 {
-  "autorun": true, // Execute `Terminals: Run` automatically at startup
+  "autorun": true, // Execute `Terminals: Run` automatically at startup or when the project is added to the workspace
+  "autokill": true, // Kill all the terminals created from this configuration when the project is removed from the workspace
   "terminals": [ // Array of terminals to open
     { // An object describing a terminal, most entries are optional
       "name": "My Terminal", // The name of the terminal, it will be displayed in the dropdown

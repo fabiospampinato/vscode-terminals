@@ -45,7 +45,12 @@
         },
         "terminals.autorun": {
           "type": "boolean",
-          "description": "Execute `Terminals: Run` automatically at startup",
+          "description": "Execute `Terminals: Run` automatically at startup or when the project is added to the workspace",
+          "default": false
+        },
+        "terminals.autokill": {
+          "type": "boolean",
+          "description": "Kill all the terminals created from this configuration when the project is removed from the workspace",
           "default": false
         },
         "terminals.invertCommandsAndDescription": {
