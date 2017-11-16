@@ -1,3 +1,7 @@
+### Version 1.8.0
+- Added support for variable substitution
+- Added an option for disabling variable substitution
+
 ### Version 1.7.0
 - Add multi-root support
 
