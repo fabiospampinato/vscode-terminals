@@ -4,6 +4,7 @@
 import * as vscode from 'vscode';
 import * as Commands from './commands';
 import Config from './config';
+import Substitutions from './substitutions';
 import Utils from './utils';
 
 /* HELPERS */
@@ -13,11 +14,12 @@ async function autostartWorkspaceFolders ( folders?: vscode.WorkspaceFolder[] ) 
   if ( !folders ) return;
 
   const rootPaths = folders.map ( folder => folder.uri.fsPath ),
-        configs = await Promise.all ( rootPaths.map ( rootPath => Config.get ( rootPath ) ) );
+        configs = await Promise.all ( rootPaths.map ( rootPath => Config.get ( rootPath ) ) ),
+        substitutions = Substitutions.get ();
 
   configs.forEach ( ( config, i ) => {
     if ( config.autorun ) {
-      Commands.runTerminals ( rootPaths[i] );
+      Commands.runTerminals ( rootPaths[i], substitutions );
     }
   });
 

@@ -5,18 +5,21 @@ import * as _ from 'lodash';
 import * as vscode from 'vscode';
 import Config from './config';
 import run from './run';
+import Substitutions from './substitutions';
 import Utils from './utils';
 
 /* COMMANDS */
 
-async function runTerminals ( rootPath?: string ) {
+async function runTerminals ( rootPath?: string, substitutions? ) {
 
   const config = await Config.get ( rootPath ),
         terminals = config.terminals.filter ( terminal => terminal.onlyAPI !== true && terminal.onlySingle !== true );
 
   if ( !terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
 
-  const terms = await Promise.all ( terminals.map ( terminal => run ( terminal, config ) ) ),
+  substitutions = substitutions || Substitutions.get ();
+
+  const terms = await Promise.all ( terminals.map ( terminal => run ( terminal, config, substitutions ) ) ),
         term = terms.find ( ({ __terminal }) => __terminal.open || __terminal.focus  ) as vscode.Terminal;
 
   if ( !term ) return;
@@ -83,6 +86,10 @@ async function initConfig () {
         'echo "Only the last command won\'t be executed"',
         'Press enter to run me'
       ]
+    }, {
+      name: 'Variable Substitution',
+      description: 'Many special strings can be substituted dynamically',
+      "command": "echo \"workspaceFolder: [workspaceFolder]\\nworkspaceFolderBasename: [workspaceFolderBasename]\\nfile: [file]\\nrelativeFile: [relativeFile]\\nfileBasename: [fileBasename]\\nfileBasenameNoExtension: [fileBasenameNoExtension]\\nfileDirname: [fileDirname]\\nfileExtname: [fileExtname]\\ncwd: [cwd]\\nlineNumber: [lineNumber]\""
     }, {
       name: 'Only Single',
       open: true,

@@ -4,6 +4,7 @@
 import * as _ from 'lodash';
 import * as vscode from 'vscode';
 import Config from './config';
+import Substitutions from './substitutions';
 import Utils from './utils';
 
 /* TERMINALS CACHE */ // Used for the `recycle` and `target` options
@@ -52,15 +53,20 @@ onRootRemove ();
 
 /* RUN */
 
-async function run ( terminal, config? ) {
+async function run ( terminal, config?, substitutions? ) {
 
   const {name, target, command, commands, execute, recycle, shellPath, shellArgs} = terminal,
-        configPath = _.get ( config, 'configPath' ) as string,
-        texts = commands || [];
+        configPath = _.get ( config, 'configPath' ) as string;
+
+  let texts = commands || [];
 
   if ( command ) texts.unshift ( command );
 
   if ( !texts.length ) return;
+
+  substitutions = substitutions || Substitutions.get ();
+
+  texts = texts.map ( text => Substitutions.apply ( text, substitutions ) );
 
   const cacheTarget = target || name,
         cacheTerm = recycle !== false && cache[cacheTarget],
