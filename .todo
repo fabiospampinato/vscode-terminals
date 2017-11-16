@@ -1,4 +1,6 @@
 
+☐ Auto-detect terminals (npm, gulp, grunt etc.)
+☐ Variable substitution, add support for `[env:Name]`
 ☐ Multi-root: group terminals in a single quickpick
 ☐ Restore terminals output
 ☐ Terminals groups
