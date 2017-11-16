@@ -55,7 +55,7 @@ onRootRemove ();
 
 async function run ( terminal, config?, substitutions? ) {
 
-  const {name, target, command, commands, execute, recycle, shellPath, shellArgs} = terminal,
+  const {name, target, command, commands, execute, recycle, substitution, shellPath, shellArgs} = terminal,
         configPath = _.get ( config, 'configPath' ) as string;
 
   let texts = commands || [];
@@ -64,9 +64,13 @@ async function run ( terminal, config?, substitutions? ) {
 
   if ( !texts.length ) return;
 
-  substitutions = substitutions || Substitutions.get ();
+  if ( substitution !== false ) {
 
-  texts = texts.map ( text => Substitutions.apply ( text, substitutions ) );
+    substitutions = substitutions || Substitutions.get ();
+
+    texts = texts.map ( text => Substitutions.apply ( text, substitutions ) );
+
+  }
 
   const cacheTarget = target || name,
         cacheTerm = recycle !== false && cache[cacheTarget],

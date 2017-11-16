@@ -66,6 +66,7 @@ The configuration is an object that looks like this:
         "cd to/my/chest",
         "touch my_heart"
       ],
+      "substitution": false, // Disable variable substitution for this terminal
       "recycle": false, // Always create a new terminal
       "target": "My Other Terminal",// Execute the commands in this terminal's instance
       "open": true, // Open the terminal after executing its commands
