@@ -1,3 +1,6 @@
+### Version 1.8.1
+- Readme: added an hint about icons
+
 ### Version 1.8.0
 - Added support for variable substitution
 - Added an option for disabling variable substitution
