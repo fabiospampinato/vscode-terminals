@@ -56,7 +56,7 @@ The configuration is an object that looks like this:
 {
   "autorun": true, // Execute `Terminals: Run` automatically at startup or when the project is added to the workspace
   "autokill": true, // Kill all the terminals created from this configuration when the project is removed from the workspace
-  "env": { "name": "value" }, // Key value pairs of enviroment variables that will be applied to any terminal opened
+  "env": { "name": "value" }, // Global environment variables that will be applied to all terminals
   "terminals": [ // Array of terminals to open
     { // An object describing a terminal, most entries are optional
       "name": "My Terminal", // The name of the terminal, it will be displayed in the dropdown
@@ -77,9 +77,9 @@ The configuration is an object that looks like this:
       "onlyAPI": true, // Don't run this with the `Terminals: Run` command and hide it from the `Terminals: Run Single` command
       "execute": false, // Write the last command without executing it
       "shellPath": '/bin/bash', // Path to a custom shell executable
-      "shellArgs": ["--foo"] // Arguments to pass to the shell executable
-      "env": {"name": "value", "name2": "value2"}, // Key value pairs for enviroment variables
-      "applyGobalEnv": false, // Don't set enviroment variables that where set on the top level
+      "shellArgs": ["--foo"], // Arguments to pass to the shell executable
+      "env": { "name": "value" }, // Environment variables that will be applied to this terminal
+      "envInherit": false // Don't inherit global environment variables
     }
   ]
 }

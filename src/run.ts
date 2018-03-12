@@ -53,11 +53,12 @@ onRootRemove ();
 
 /* RUN */
 
-async function run ( terminal, config?, substitutions? ) {
+async function run ( terminal, config, substitutions? ) {
 
-  const { name, target, command, commands, execute, recycle, substitution, shellPath, shellArgs, env: terminalEnv, applyGlobalEnv } = terminal,
-    configPath = _.get(config, 'configPath') as string,
-    configEnv = _.get(config, 'env') as { [key: string]: string };
+  const { name, target, command, commands, execute, recycle, substitution, shellPath, shellArgs, env: terminalEnv, envInherit } = terminal,
+        configPath = _.get ( config, 'configPath' ) as string,
+        configEnv = _.get ( config, 'env' ),
+        env = Utils.parseEnv ( envInherit !== false ? _.merge ( {}, configEnv, terminalEnv ) : terminalEnv );
 
   let texts = commands || [];
 
@@ -73,15 +74,10 @@ async function run ( terminal, config?, substitutions? ) {
 
   }
 
-  let env = terminalEnv;
-  if (applyGlobalEnv) {
-    env = _.extend(env, configEnv);
-  }
-
   const cacheTarget = target || name,
         cacheTerm = recycle !== false && cache[cacheTarget],
         isCached = !!cacheTerm,
-        term = cacheTerm || vscode.window.createTerminal ( { env, name: cacheTarget, shellPath, shellArgs } );
+        term = cacheTerm || vscode.window.createTerminal ({ env, name: cacheTarget, shellPath, shellArgs });
 
   cache[cacheTarget] = term;
 
