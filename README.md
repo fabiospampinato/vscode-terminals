@@ -77,6 +77,7 @@ The configuration is an object that looks like this:
       "execute": false, // Write the last command without executing it
       "shellPath": '/bin/bash', // Path to a custom shell executable
       "shellArgs": ["--foo"] // Arguments to pass to the shell executable
+      "env": {"name": "value", "name2": "value2"}, // Key value pairs for enviroment variables
     }
   ]
 }
