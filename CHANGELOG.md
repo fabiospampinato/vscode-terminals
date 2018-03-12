@@ -1,3 +1,8 @@
+### Version 1.9.0
+- Added support for environment variables
+- Updated keywords
+- Renamed to `Terminals Manager`
+
 ### Version 1.8.1
 - Readme: added an hint about icons
 
