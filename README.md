@@ -1,4 +1,4 @@
-# VSC Terminals
+# VSC Terminals Manager
 
 <p align="center">
 	<img src="https://raw.githubusercontent.com/fabiospampinato/vscode-terminals/master/resources/logo-128x128.png" alt="Logo">

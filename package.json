@@ -1,6 +1,6 @@
 {
   "name": "vscode-terminals",
-  "displayName": "Terminals",
+  "displayName": "Terminals Manager",
   "description": "An extension for setting-up multiple terminals at once, or just running some commands",
   "icon": "resources/logo-128x128.png",
   "version": "1.8.1",
