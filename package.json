@@ -79,6 +79,12 @@
           "description": "Sort terminals alphabetically",
           "default": false
         },
+        "terminals.multiplexer": {
+          "type": "string",
+          "enum": ["screen", "tmux"],
+          "description": "The terminal multiplexer to use for persistent terminals",
+          "default": "screen"
+        },
         "terminals.terminals": {
           "type": "array",
           "description": "Array of terminals to open",

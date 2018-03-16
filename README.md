@@ -42,7 +42,9 @@ It adds 1 shortcut:
   "terminals.invertCommandsAndDescription": false, // Invert a terminal commands and description in the quickpick
   "terminals.showCommands": false, // Show terminals' commands in the quickpick
   "terminals.showDescriptions": true, // Show terminals' descriptions in the quickpick
-  "terminals.sortTerminals": false // Sort terminals alphabetically
+  "terminals.sortTerminals": false, // Sort terminals alphabetically
+  "terminals.env": {}, // Global environment variables that will be applied to all terminals
+  "terminals.multiplexer": "screen" // The terminal multiplexer to use for persistent terminals, supported values are: "screen", "tmux"
 }
 ```
 
@@ -59,6 +61,7 @@ The configuration is an object that looks like this:
   "env": { "name": "value" }, // Global environment variables that will be applied to all terminals
   "terminals": [ // Array of terminals to open
     { // An object describing a terminal, most entries are optional
+
       "name": "My Terminal", // The name of the terminal, it will be displayed in the dropdown
       "description": "A terminal that runs some commands", // The description of the terminal
       "icon": "code", // An icon to show next to the name
@@ -68,25 +71,44 @@ The configuration is an object that looks like this:
         "cd to/my/chest",
         "touch my_heart"
       ],
+
+      "target": "My Other Terminal",// Execute the commands in this terminal's instance
+      "persistent": "unique_session_name", // Keep the process running even when closing the terminal and reuse it, preservig the output. The unique session name will be passed to the terminal multiplexer
       "substitution": false, // Disable variable substitution for this terminal
       "recycle": false, // Always create a new terminal
-      "target": "My Other Terminal",// Execute the commands in this terminal's instance
       "open": true, // Open the terminal after executing its commands
       "focus": true, // Open the terminal after executing its commands and focus to it
+      "execute": false, // Write the last command without executing it
+
       "onlySingle": true, // Don't run this with the `Terminals: Run` command
       "onlyMultiple": true, // Hide it from the `Terminals: Run Single` command
       "onlyAPI": true, // Don't run this with the `Terminals: Run` command and hide it from the `Terminals: Run Single` command
-      "execute": false, // Write the last command without executing it
+
       "shellPath": '/bin/bash', // Path to a custom shell executable
       "shellArgs": ["--foo"], // Arguments to pass to the shell executable
       "env": { "name": "value" }, // Environment variables that will be applied to this terminal
       "envInherit": false // Don't inherit global environment variables
+
     }
   ]
 }
 ```
 
 You can also define terminals in your Visual Studio Code settings file under the key `terminals.terminals`. This way you can have global terminals, which are always available, while still having the ability to add some project-specific terminals in your configuration file.
+
+## Persistent Terminals
+
+Persistent terminals are achieved by saving sessions, and reattaching to them, using your [terminal multiplexer](https://en.wikipedia.org/wiki/Terminal_multiplexer) of choice.
+
+The currently supported terminal multiplexers are [GNU Screen](https://en.wikipedia.org/wiki/GNU_Screen) and [tmux](https://en.wikipedia.org/wiki/Tmux).
+
+You must have the terminal multiplexer setted in the `terminals.multiplexer` setting installed in your system for this to work:
+  - **Linux/macOS**: your system probably comes with both `screen` and `tmux` installed by default.
+  - **Windows**: you can install them via [cygwin](http://www.cygwin.com) or [WSL](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux).
+
+**Note**: a terminal multiplexer usually modifies the way a terminal work. For instance `ctrl+a` usually means "go to the beginning of the line" inside a terminal, but inside `screen`, `ctrl+a` doesn't work this way. You might want to configure your terminal multiplexer to best suit your needs.
+
+**Note**: this is an experimental feature, you may encounter some bugs.
 
 ## Variable Substitution
 
@@ -112,6 +134,10 @@ This extension supports some special strings that you can put in your commands, 
 #### Run Single
 
 ![Run Single](resources/run_single.gif)
+
+### Persistent
+
+![Persistent](resources/persistent.gif)
 
 ## Hints
 

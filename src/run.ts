@@ -55,7 +55,7 @@ onRootRemove ();
 
 async function run ( terminal, config, substitutions? ) {
 
-  const { name, target, cwd, command, commands, execute, recycle, substitution, shellPath, shellArgs, env: terminalEnv, envInherit } = terminal,
+  const { name, target, cwd, command, commands, execute, persistent, recycle, substitution, shellPath, shellArgs, env: terminalEnv, envInherit } = terminal,
         configPath = _.get ( config, 'configPath' ) as string,
         configEnv = _.get ( config, 'env' ),
         env = Utils.parseEnv ( envInherit !== false ? _.merge ( {}, configEnv, terminalEnv ) : terminalEnv );
@@ -71,6 +71,14 @@ async function run ( terminal, config, substitutions? ) {
     substitutions = substitutions || Substitutions.get ();
 
     texts = texts.map ( text => Substitutions.apply ( text, substitutions ) );
+
+  }
+
+  if ( persistent ) {
+
+    const reattach = Utils.multiplexer.reattach ( config.multiplexer, persistent );
+
+    texts.unshift ( reattach );
 
   }
 
@@ -92,7 +100,11 @@ async function run ( terminal, config, substitutions? ) {
   await term.processId;
   await Utils.delay ( 150 );
 
+  if ( persistent ) term.show ( false );
+
   for ( let i = 0, l = texts.length; i < l; i++ ) {
+
+    if ( persistent && i === 1 ) await Utils.delay ( 1500 ); // It may take a while to start the multiplexer
 
     await Utils.delay ( 50 );
 

@@ -209,6 +209,27 @@ const Utils = {
 
     }
 
+  },
+
+  multiplexer: {
+
+    reattach ( multiplexer, session ) {
+
+      switch ( multiplexer ) {
+
+        case 'screen':
+          return `screen -D -R ${session}`;
+
+        case 'tmux':
+          return `tmux attach -t ${session} || tmux new -s ${session}`;
+
+        default:
+          throw new Error ( 'Unsupported multiplexer' );
+
+      }
+
+    }
+
   }
 
 };

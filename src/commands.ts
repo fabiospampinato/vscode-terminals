@@ -87,9 +87,15 @@ async function initConfig () {
         'Press enter to run me'
       ]
     }, {
+      name: 'Persistent',
+      focus: true,
+      onlySingle: true,
+      persistent: 'demo_persistent',
+      command: 'echo "I\'m persistent! Try to reload the window and re-execute this command"'
+    }, {
       name: 'Variable Substitution',
       description: 'Many special strings can be substituted dynamically',
-      "command": "echo \"workspaceFolder: [workspaceFolder]\\nworkspaceFolderBasename: [workspaceFolderBasename]\\nfile: [file]\\nrelativeFile: [relativeFile]\\nfileBasename: [fileBasename]\\nfileBasenameNoExtension: [fileBasenameNoExtension]\\nfileDirname: [fileDirname]\\nfileExtname: [fileExtname]\\ncwd: [cwd]\\nlineNumber: [lineNumber]\""
+      command: "echo \"workspaceFolder: [workspaceFolder]\\nworkspaceFolderBasename: [workspaceFolderBasename]\\nfile: [file]\\nrelativeFile: [relativeFile]\\nfileBasename: [fileBasename]\\nfileBasenameNoExtension: [fileBasenameNoExtension]\\nfileDirname: [fileDirname]\\nfileExtname: [fileExtname]\\ncwd: [cwd]\\nlineNumber: [lineNumber]\""
     }, {
       name: 'Only Single',
       open: true,

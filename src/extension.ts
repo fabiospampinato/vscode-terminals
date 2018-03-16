@@ -11,7 +11,7 @@ import Utils from './utils';
 
 async function autostartWorkspaceFolders ( folders?: vscode.WorkspaceFolder[] ) {
 
-  if ( !folders ) return;
+  if ( !folders || !folders.length ) return;
 
   const rootPaths = folders.map ( folder => folder.uri.fsPath ),
         configs = await Promise.all ( rootPaths.map ( rootPath => Config.get ( rootPath ) ) ),
