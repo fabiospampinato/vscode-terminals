@@ -1,3 +1,6 @@
+### Version 1.10.0
+- Added a `cwd` configuration option
+
 ### Version 1.9.0
 - Added support for environment variables
 - Updated keywords
