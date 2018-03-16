@@ -1,4 +1,4 @@
-# VSC Terminals Manager
+# Terminals Manager
 
 <p align="center">
 	<img src="https://raw.githubusercontent.com/fabiospampinato/vscode-terminals/master/resources/logo-128x128.png" alt="Logo">
@@ -12,10 +12,10 @@ Check the demo below to learn more.
 
 ## Install
 
-Run the following in the command palette:
+Follow the instructions in the [Marketplace](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-terminals), or run the following in the command palette:
 
 ```shell
-ext install vscode-terminals
+ext install fabiospampinato.vscode-terminals
 ```
 
 ## Usage
