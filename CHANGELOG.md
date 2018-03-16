@@ -1,3 +1,6 @@
+### Version 1.11.1
+- Updated readme
+
 ### Version 1.11.0
 - Added support for persistent terminals
 
