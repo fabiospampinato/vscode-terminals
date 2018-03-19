@@ -56,6 +56,9 @@
         },
         "terminals.env": {
           "type": "object",
+          "additionalProperties": {
+            "type": ["string", "null"]
+          },
           "description": " Global environment variables that will be applied to all terminals",
           "default": {}
         },

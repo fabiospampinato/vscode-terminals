@@ -46,20 +46,6 @@ const Utils = {
 
   },
 
-  parseEnv ( env ) {
-
-    if ( !_.isPlainObject ( env ) ) return env;
-
-    return _.transform ( env, ( acc, value, key ) => {
-
-      acc[key] = String ( value );
-
-      return acc;
-
-    }, {} );
-
-  },
-
   delay ( ms ) {
 
     return new Promise ( resolve => setTimeout ( resolve, ms ) );

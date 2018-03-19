@@ -58,7 +58,7 @@ async function run ( terminal, config, substitutions? ) {
   const { name, target, cwd, command, commands, execute, persistent, recycle, substitution, shellPath, shellArgs, env: terminalEnv, envInherit } = terminal,
         configPath = _.get ( config, 'configPath' ) as string,
         configEnv = _.get ( config, 'env' ),
-        env = Utils.parseEnv ( envInherit !== false ? _.merge ( {}, configEnv, terminalEnv ) : terminalEnv );
+        env = envInherit !== false ? _.merge ( {}, configEnv, terminalEnv ) : terminalEnv;
 
   let texts = commands || [];
 
