@@ -1,3 +1,6 @@
+### Version 1.11.2
+- Supporting only string environment variables
+
 ### Version 1.11.1
 - Updated readme
 
