@@ -53,11 +53,12 @@ onRootRemove ();
 
 /* RUN */
 
-async function run ( terminal, config, substitutions? ) {
+async function run ( terminal, config, rootPath?, substitutions? ) {
 
-  const { name, target, cwd, command, commands, execute, persistent, recycle, substitution, shellPath, shellArgs, env: terminalEnv, envInherit } = terminal,
+  const { name, target, cwd: terminalCwd, command, commands, execute, persistent, recycle, substitution, shellPath, shellArgs, env: terminalEnv, envInherit } = terminal,
         configPath = _.get ( config, 'configPath' ) as string,
         configEnv = _.get ( config, 'env' ),
+        cwd = terminalCwd || rootPath,
         env = envInherit !== false ? _.merge ( {}, configEnv, terminalEnv ) : terminalEnv;
 
   let texts = commands || [];
