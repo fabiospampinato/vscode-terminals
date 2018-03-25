@@ -1,3 +1,6 @@
+### Version 1.11.3
+- Ensuring autorun terminals in a multi-root workspace work, no matter the order of the roots
+
 ### Version 1.11.2
 - Supporting only string environment variables
 
