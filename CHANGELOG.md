@@ -1,3 +1,6 @@
+### Version 1.11.4
+- Replaced `logout` with `exit 0`
+
 ### Version 1.11.3
 - Ensuring autorun terminals in a multi-root workspace work, no matter the order of the roots
 
