@@ -114,18 +114,20 @@ You must have the terminal multiplexer setted in the `terminals.multiplexer` set
 
 ## Variable Substitution
 
-This extension supports some special strings that you can put in your commands, they will be substituted with the appropriate value when you execute the terminal. This is especially useful for defining global terminals. Here they are:
+This extension supports some special tokens that you can put in your commands, they will be substituted with the appropriate value when you execute the terminal. This is especially useful for defining global terminals. Here they are:
 
-- `[workspaceFolder]`: the path of the workspace folder that contains the active file
-- `[workspaceFolderBasename]`: the name of the workspace folder that contains the active file without any slashes (/)
-- `[file]`: the current opened file
-- `[relativeFile]`: the current opened file relative to the workspace folder containing the file
-- `[fileBasename]`: the current opened file's basename
-- `[fileBasenameNoExtension]`: the current opened file's basename without the extension
-- `[fileDirname]`: the current opened file's dirname
-- `[fileExtname]`: the current opened file's extension
-- `[cwd]`: the current working directory on startup
-- `[lineNumber]`: the current selected line number in the active file
+| Token                       | Value                                                                                  |
+|-----------------------------|----------------------------------------------------------------------------------------|
+| `[workspaceFolder]`         | The path of the workspace folder that contains the active file                         |
+| `[workspaceFolderBasename]` | The name of the workspace folder that contains the active file without any slashes (/) |
+| `[file]`                    | The current opened file                                                                |
+| `[relativeFile]`            | The current opened file relative to the workspace folder containing the file           |
+| `[fileBasename]`            | The current opened file's basename                                                     |
+| `[fileBasenameNoExtension]` | The current opened file's basename without the extension                               |
+| `[fileDirname]`             | The current opened file's dirname                                                      |
+| `[fileExtname]`             | The current opened file's extension                                                    |
+| `[cwd]`                     | The current working directory on startup                                               |
+| `[lineNumber]`              | The current selected line number in the active file                                    |
 
 ## Demo
 
