@@ -1,3 +1,6 @@
+### Version 1.11.5
+- Variable Substitution: putting the tokens in a table
+
 ### Version 1.11.4
 - Replaced `logout` with `exit 0`
 
