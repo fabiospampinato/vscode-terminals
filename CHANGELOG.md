@@ -1,3 +1,6 @@
+### Version 1.11.6
+- Ensuring the configuration gets opened as a non-preview editor
+
 ### Version 1.11.5
 - Variable Substitution: putting the tokens in a table
 
