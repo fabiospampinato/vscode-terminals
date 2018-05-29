@@ -31,7 +31,11 @@ const Substitutions = {
   apply ( string, substitutions ) {
 
     _.forOwn ( substitutions, ( value, key ) => {
-      string = string.replace ( `[${key}]`, value );
+
+      const re = new RegExp ( `\\[${_.escapeRegExp ( key )}\\]`, 'g' );
+
+      string = string.replace ( re, value );
+
     });
 
     return string;
