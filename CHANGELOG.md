@@ -1,3 +1,8 @@
+### Version 1.12.0
+- Variable substitution: added support for the `cwd`, `shellArgs` and `env` configuration fields
+- CWD: added support for relative paths
+- CWD: added support for paths starting with a tilde (~)
+
 ### Version 1.11.7
 - Variable substituion: ensuring all instance of each token get replaced
 
