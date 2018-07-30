@@ -2,6 +2,7 @@
 /* IMPORT */
 
 import * as _ from 'lodash';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import Config from './config';
 import Substitutions from './substitutions';
@@ -55,6 +56,8 @@ onRootRemove ();
 
 async function run ( terminal, config, rootPath?, substitutions? ) {
 
+  rootPath = rootPath || Utils.folder.getActiveRootPath ();
+
   const { name, target, cwd: terminalCwd, command, commands, execute, persistent, recycle, substitution, shellPath, env: terminalEnv, envInherit } = terminal,
         configPath = _.get ( config, 'configPath' ) as string,
         configEnv = _.get ( config, 'env' );
@@ -76,6 +79,12 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
     cwd = Substitutions.apply ( cwd, substitutions );
     texts = Substitutions.apply ( texts, substitutions );
     env = Substitutions.apply ( env, substitutions );
+
+  }
+
+  if ( cwd ) {
+
+    cwd = path.resolve ( rootPath, cwd );
 
   }
 
