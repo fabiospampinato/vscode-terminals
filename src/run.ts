@@ -3,6 +3,7 @@
 
 import * as _ from 'lodash';
 import * as path from 'path';
+import * as untildify from 'untildify';
 import * as vscode from 'vscode';
 import Config from './config';
 import Substitutions from './substitutions';
@@ -84,7 +85,7 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
 
   if ( cwd ) {
 
-    cwd = path.resolve ( rootPath, cwd );
+    cwd = path.resolve ( rootPath, untildify ( cwd ) );
 
   }
 

@@ -57,7 +57,10 @@
         "terminals.env": {
           "type": "object",
           "additionalProperties": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "description": " Global environment variables that will be applied to all terminals",
           "default": {}
@@ -84,7 +87,10 @@
         },
         "terminals.multiplexer": {
           "type": "string",
-          "enum": ["screen", "tmux"],
+          "enum": [
+            "screen",
+            "tmux"
+          ],
           "description": "The terminal multiplexer to use for persistent terminals",
           "default": "screen"
         },
@@ -133,7 +139,8 @@
     "json5": "^0.5.1",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
-    "pify": "^3.0.0"
+    "pify": "^3.0.0",
+    "untildify": "^3.0.3"
   },
   "devDependencies": {
     "@types/node": "^6.0.40",
