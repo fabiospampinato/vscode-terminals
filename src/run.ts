@@ -55,13 +55,14 @@ onRootRemove ();
 
 async function run ( terminal, config, rootPath?, substitutions? ) {
 
-  const { name, target, cwd: terminalCwd, command, commands, execute, persistent, recycle, substitution, shellPath, shellArgs, env: terminalEnv, envInherit } = terminal,
+  const { name, target, cwd: terminalCwd, command, commands, execute, persistent, recycle, substitution, shellPath, env: terminalEnv, envInherit } = terminal,
         configPath = _.get ( config, 'configPath' ) as string,
-        configEnv = _.get ( config, 'env' ),
-        cwd = terminalCwd || rootPath,
-        env = envInherit !== false ? _.merge ( {}, configEnv, terminalEnv ) : terminalEnv;
+        configEnv = _.get ( config, 'env' );
 
-  let texts = commands || [];
+  let {shellArgs} = terminal,
+      cwd = terminalCwd || rootPath,
+      texts = commands || [],
+      env = envInherit !== false ? _.merge ( {}, configEnv, terminalEnv ) : terminalEnv;
 
   if ( command ) texts.unshift ( command );
 
@@ -71,7 +72,10 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
 
     substitutions = substitutions || Substitutions.get ();
 
-    texts = texts.map ( text => Substitutions.apply ( text, substitutions ) );
+    shellArgs = Substitutions.apply ( cwd, substitutions );
+    cwd = Substitutions.apply ( cwd, substitutions );
+    texts = Substitutions.apply ( texts, substitutions );
+    env = Substitutions.apply ( env, substitutions );
 
   }
 

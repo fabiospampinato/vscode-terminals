@@ -114,7 +114,7 @@ You must have the terminal multiplexer setted in the `terminals.multiplexer` set
 
 ## Variable Substitution
 
-This extension supports some special tokens that you can put in your commands, they will be substituted with the appropriate value when you execute the terminal. This is especially useful for defining global terminals. Here they are:
+This extension supports some special tokens that you can put in your configuration, they will be substituted with the appropriate value when you execute the terminal. This is especially useful for defining global terminals. Here they are:
 
 | Token                       | Value                                                                                  |
 |-----------------------------|----------------------------------------------------------------------------------------|

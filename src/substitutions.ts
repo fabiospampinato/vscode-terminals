@@ -28,17 +28,35 @@ const Substitutions = {
 
   },
 
-  apply ( string, substitutions ) {
+  apply ( target, substitutions ) {
 
-    _.forOwn ( substitutions, ( value, key ) => {
+    if ( _.isArray ( target ) ) {
 
-      const re = new RegExp ( `\\[${_.escapeRegExp ( key )}\\]`, 'g' );
+      return target.map ( value => Substitutions.apply ( value, substitutions ) );
 
-      string = string.replace ( re, value );
+    } else if ( _.isPlainObject ( target ) ) {
 
-    });
+      return _.reduce ( target, ( acc, value, key ) => {
 
-    return string;
+        acc[key] = Substitutions.apply ( value, substitutions );
+
+        return acc;
+
+      }, {} );
+
+    } else if ( _.isString ( target ) ) {
+
+      _.forOwn ( substitutions, ( value, key ) => {
+
+        const re = new RegExp ( `\\[${_.escapeRegExp ( key )}\\]`, 'g' );
+
+        target = target.replace ( re, value );
+
+      });
+
+    }
+
+    return target;
 
   }
 
