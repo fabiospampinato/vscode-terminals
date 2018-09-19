@@ -131,7 +131,7 @@ This extension supports some special tokens that you can put in your configurati
 
 ## Demo
 
-#### Edit Configuration + Run:
+#### Edit Configuration + Run
 
 ![Run](resources/run.gif)
 
