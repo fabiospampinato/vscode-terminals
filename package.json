@@ -5,7 +5,7 @@
   "icon": "resources/logo-128x128.png",
   "version": "1.12.0",
   "license": "MIT",
-  "main": "out/src/extension.js",
+  "main": "out/extension.js",
   "publisher": "fabiospampinato",
   "author": {
     "name": "Fabio Spampinato",
@@ -128,8 +128,9 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -watch -p ./",
+    "vscode:prepublish": "rm -rf out && webpack --mode production",
+    "compile": "webpack --mode development",
+    "compile:watch": "webpack --mode development --watch",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "node ./node_modules/vscode/bin/test"
   },
@@ -145,6 +146,7 @@
   "devDependencies": {
     "@types/node": "^6.0.40",
     "@types/lodash": "^4.14.59",
+    "ts-loader": "^5.2.1",
     "typescript": "^2.0.3",
     "vscode": "^1.1.5"
   }
