@@ -1,3 +1,6 @@
+### Version 1.12.1
+- Bundling with webpack
+
 ### Version 1.12.0
 - Variable substitution: added support for the `cwd`, `shellArgs` and `env` configuration fields
 - CWD: added support for relative paths
