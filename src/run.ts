@@ -70,8 +70,6 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
 
   if ( command ) texts.unshift ( command );
 
-  if ( !texts.length ) return;
-
   if ( substitution !== false ) {
 
     substitutions = substitutions || Substitutions.get ();
