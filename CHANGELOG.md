@@ -1,3 +1,7 @@
+### Version 1.12.2
+- Allowing terminals without commands
+- Fixed `shellArgs` support
+
 ### Version 1.12.1
 - Bundling with webpack
 
