@@ -74,7 +74,7 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
 
     substitutions = substitutions || Substitutions.get ();
 
-    shellArgs = Substitutions.apply ( cwd, substitutions );
+    shellArgs = Substitutions.apply ( shellArgs, substitutions );
     cwd = Substitutions.apply ( cwd, substitutions );
     texts = Substitutions.apply ( texts, substitutions );
     env = Substitutions.apply ( env, substitutions );
