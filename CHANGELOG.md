@@ -1,3 +1,7 @@
+### Version 1.12.3
+- Outputting modern code (es2017, faster)
+- Using "Debug Launcher" for debugging
+
 ### Version 1.12.2
 - Allowing terminals without commands
 - Fixed `shellArgs` support
