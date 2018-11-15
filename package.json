@@ -135,6 +135,8 @@
     "test": "node ./node_modules/vscode/bin/test"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.118",
+    "@types/node": "^10.12.8",
     "absolute": "0.0.1",
     "conf-merge": "^1.0.0",
     "json5": "^0.5.1",
@@ -144,8 +146,6 @@
     "untildify": "^3.0.3"
   },
   "devDependencies": {
-    "@types/node": "^6.0.40",
-    "@types/lodash": "^4.14.59",
     "ts-loader": "^5.2.1",
     "typescript": "^2.0.3",
     "vscode": "^1.1.5",
