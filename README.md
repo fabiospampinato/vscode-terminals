@@ -1,7 +1,7 @@
 # Terminals Manager
 
 <p align="center">
-	<img src="https://raw.githubusercontent.com/fabiospampinato/vscode-terminals/master/resources/logo.png" width="128" alt="Logo">
+  <img src="https://raw.githubusercontent.com/fabiospampinato/vscode-terminals/master/resources/logo.png" width="128" alt="Logo">
 </p>
 
 An extension for setting-up multiple terminals at once, or just running some commands.
