@@ -1,3 +1,6 @@
+### Version 1.12.6
+- Checking for cwd’s existence only after properly parsing it
+
 ### Version 1.12.5
 - Showing an error when using invalid cwd paths
 
