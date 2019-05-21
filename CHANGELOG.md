@@ -1,3 +1,6 @@
+### Version 1.12.5
+- Showing an error when using invalid cwd paths
+
 ### Version 1.12.4
 - Readme: using hi-res logo
 
