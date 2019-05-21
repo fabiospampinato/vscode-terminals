@@ -19,7 +19,7 @@ async function runTerminals ( rootPath?: string, substitutions? ) {
 
   substitutions = substitutions || Substitutions.get ();
 
-  const terms = await Promise.all ( terminals.map ( terminal => run ( terminal, config, rootPath, substitutions ) ) ),
+  const terms = ( await Promise.all ( terminals.map ( terminal => run ( terminal, config, rootPath, substitutions ) ) ) ).filter ( _.identity ),
         term = terms.find ( ({ __terminal }) => __terminal.open || __terminal.focus  ) as vscode.Terminal;
 
   if ( !term ) return;
@@ -53,7 +53,7 @@ async function runTerminalByName ( name ) {
 
   const term = await run ( terminal, config );
 
-  if ( !terminal.open && !terminal.focus ) return;
+  if ( !term || ( !terminal.open && !terminal.focus ) ) return;
 
   term.show ( !terminal.focus );
 

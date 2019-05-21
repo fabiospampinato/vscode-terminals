@@ -2,6 +2,7 @@
 /* IMPORT */
 
 import * as _ from 'lodash';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as untildify from 'untildify';
 import * as vscode from 'vscode';
@@ -67,6 +68,14 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
       cwd = terminalCwd || rootPath,
       texts = commands || [],
       env = envInherit !== false ? _.merge ( {}, configEnv, terminalEnv ) : terminalEnv;
+
+  if ( !fs.existsSync ( cwd ) ) {
+
+    vscode.window.showErrorMessage ( 'The provided cwd path doesn\'t exist' );
+
+    return;
+
+  }
 
   if ( command ) texts.unshift ( command );
 
