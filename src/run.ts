@@ -69,14 +69,6 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
       texts = commands || [],
       env = envInherit !== false ? _.merge ( {}, configEnv, terminalEnv ) : terminalEnv;
 
-  if ( !fs.existsSync ( cwd ) ) {
-
-    vscode.window.showErrorMessage ( 'The provided cwd path doesn\'t exist' );
-
-    return;
-
-  }
-
   if ( command ) texts.unshift ( command );
 
   if ( substitution !== false ) {
@@ -93,6 +85,14 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
   if ( cwd ) {
 
     cwd = path.resolve ( rootPath, untildify ( cwd ) );
+
+    if ( !fs.existsSync ( cwd ) ) {
+
+      vscode.window.showErrorMessage ( 'The provided cwd path doesn\'t exist' );
+
+      return;
+
+    }
 
   }
 
