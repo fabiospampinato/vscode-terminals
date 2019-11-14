@@ -1,3 +1,6 @@
+### Version 1.12.7
+- Ensuring we are not mutating VSC’s config object
+
 ### Version 1.12.6
 - Checking for cwd’s existence only after properly parsing it
 
