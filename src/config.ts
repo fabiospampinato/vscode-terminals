@@ -71,7 +71,7 @@ const Config = {
           configPath: string = extension.configPath || defaults.configPath,
           config = configPath && await Config.getFile ( configPath );
 
-    return merge ( {}, defaults, extension, config ) as any;
+    return merge ( {}, defaults, extension, config, {configPath} ) as any;
 
   }
 
