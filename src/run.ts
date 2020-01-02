@@ -88,7 +88,7 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
 
     if ( !fs.existsSync ( cwd ) ) {
 
-      vscode.window.showErrorMessage ( 'The provided cwd path doesn\'t exist' );
+      vscode.window.showErrorMessage ( `cwd: ${cwd} doesn't exist` );
 
       return;
 
