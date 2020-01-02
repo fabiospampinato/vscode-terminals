@@ -1,3 +1,6 @@
+### Version 1.12.9
+- Improved error message when an cwd path doesn't exist
+
 ### Version 1.12.8
 - Ensuring the default configuration location is used if none is provided
 
