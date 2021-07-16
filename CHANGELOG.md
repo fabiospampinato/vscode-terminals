@@ -1,3 +1,8 @@
+### Version 1.12.10
+- Update .github/FUNDING.yml
+- Deleted repo-level github funding.yml
+- Added a dialog announcing the fundraising
+
 ### Version 1.12.9
 - Improved error message when an cwd path doesn't exist
 
