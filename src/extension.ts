@@ -10,7 +10,7 @@ import Utils from './utils';
 
 /* HELPERS */
 
-async function autostartWorkspaceFolders ( folders?: vscode.WorkspaceFolder[] ) {
+async function autostartWorkspaceFolders ( folders?: readonly vscode.WorkspaceFolder[] ) {
 
   if ( !folders || !folders.length ) return;
 

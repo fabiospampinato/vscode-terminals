@@ -1,3 +1,7 @@
+### Version 1.12.11
+- Added support for icons on the list of active terminals
+- Switched to @types/vscode instead of vscode
+
 ### Version 1.12.10
 - Update .github/FUNDING.yml
 - Deleted repo-level github funding.yml

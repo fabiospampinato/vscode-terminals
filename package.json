@@ -3,7 +3,7 @@
   "displayName": "Terminals Manager",
   "description": "An extension for setting-up multiple terminals at once, or just running some commands",
   "icon": "resources/logo-128x128.png",
-  "version": "1.12.10",
+  "version": "1.12.11",
   "license": "MIT",
   "main": "out/extension.js",
   "publisher": "fabiospampinato",
@@ -19,7 +19,7 @@
     "url": "https://github.com/fabiospampinato/vscode-terminals"
   },
   "engines": {
-    "vscode": "^1.20.0"
+    "vscode": "^1.58.1"
   },
   "keywords": [
     "terminals",
@@ -130,27 +130,28 @@
   "scripts": {
     "vscode:prepublish": "rm -rf out && webpack --mode production",
     "compile": "webpack --mode development",
-    "compile:watch": "webpack --mode development --watch",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test"
+    "compile:watch": "webpack --mode development --watch"
   },
   "dependencies": {
     "@types/lodash": "^4.14.118",
-    "@types/node": "^10.12.8",
+    "@types/node": "^10.17.60",
     "absolute": "0.0.1",
     "conf-merge": "^1.0.0",
+    "fs": "0.0.1-security",
     "json5": "^0.5.1",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "mkdirp": "^0.5.1",
+    "path": "^0.12.7",
     "pify": "^3.0.0",
     "untildify": "^3.0.3",
     "vscode-beggar": "^1.0.0"
   },
   "devDependencies": {
-    "ts-loader": "^5.2.1",
-    "typescript": "^2.0.3",
-    "vscode": "^1.1.5",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2"
+    "ts-loader": "^5.4.5",
+    "typescript": "^3.5.1",
+    "@types/vscode": "^1.58.1",
+    "vscode-test": "^1.5.2",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12"
   }
 }
