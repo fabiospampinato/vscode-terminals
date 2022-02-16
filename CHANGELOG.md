@@ -1,3 +1,8 @@
+### Version 1.13.0
+- Added support for disabling donation prompts by setting "donations.disablePrompt" to "true"
+- Added support for rendering icons in the terminals list (thanks @alkemir)
+- Added support for rendering the icon in a custom color in the terminals list
+
 ### Version 1.12.10
 - Update .github/FUNDING.yml
 - Deleted repo-level github funding.yml
