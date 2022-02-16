@@ -65,6 +65,7 @@ The configuration is an object that looks like this:
       "name": "My Terminal", // The name of the terminal, it will be displayed in the dropdown
       "description": "A terminal that runs some commands", // The description of the terminal
       "icon": "code", // An icon to show next to the name
+      "color": "terminal.ansiCyan", // A themeable color, ref: https://code.visualstudio.com/api/references/theme-color
       "cwd": "/Users/fabio/Desktop", // A path for the current working directory to be used for the terminal
       "command": "whoami", // Single command to run
       "commands": [ // Multiple commands to run

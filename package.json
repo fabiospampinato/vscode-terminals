@@ -19,7 +19,7 @@
     "url": "https://github.com/fabiospampinato/vscode-terminals"
   },
   "engines": {
-    "vscode": "^1.58.1"
+    "vscode": "^1.60.0"
   },
   "keywords": [
     "terminals",
