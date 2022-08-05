@@ -63,6 +63,7 @@ The configuration is an object that looks like this:
     { // An object describing a terminal, most entries are optional
 
       "name": "My Terminal", // The name of the terminal, it will be displayed in the dropdown
+      "joinWith": "Another Terminal", // The name of the terminal to join with, if empty it will be a new terminal
       "description": "A terminal that runs some commands", // The description of the terminal
       "icon": "code", // An icon to show next to the name
       "color": "terminal.ansiCyan", // A themeable color, ref: https://code.visualstudio.com/api/references/theme-color
