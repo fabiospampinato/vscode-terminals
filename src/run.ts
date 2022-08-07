@@ -109,18 +109,9 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
   if ( joinWith ) {
 
     const allTerms = vscode.window.terminals;
+    joinWithTerm = allTerms.find ( term => term.name === joinWith );
 
-    for (let i = 0; i < allTerms.length; i++) {
-
-      const element = allTerms[i];
-    
-      if (element.name === joinWith) {
-        joinWithTerm = element;
-        break;
-      }
-    }
   }
-
 
   const cacheTarget = target || name,
         cacheTerm = recycle !== false && cache[cacheTarget],
@@ -138,14 +129,14 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
     shellArgs
   };
 
-	// Add the parentTerminal to the termOpts if it exists and target is not set
+  // Add the parentTerminal to the termOpts if it exists and target is not set
   if ( joinWithTerm && !target) {
     termOpts.location = {
       parentTerminal: joinWithTerm
     }
   }
 
-  const term = cacheTerm || vscode.window.createTerminal (termOpts);
+  const term = cacheTerm || vscode.window.createTerminal(termOpts);
 
   cache[cacheTarget] = term;
 
