@@ -131,7 +131,7 @@ async function run ( terminal, config, rootPath?, substitutions? ) {
 
   // Add the parentTerminal to the termOpts if it exists and target is not set
   if ( joinWithTerm && !target) {
-		//@ts-ignore
+    //@ts-ignore
     termOpts.location = {
       parentTerminal: joinWithTerm
     }
