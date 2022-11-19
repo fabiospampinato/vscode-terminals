@@ -1,3 +1,7 @@
+### Version 1.14.0
+- New terminal option: "dynamicTitle", for letting the title of the terminal depend on the command currently being executed in it
+- Wait for the startup to finish before initializing
+
 ### Version 1.13.0
 - Added support for disabling donation prompts by setting "donations.disablePrompt" to "true"
 - Added support for rendering icons in the terminals list (thanks @alkemir)
