@@ -80,6 +80,7 @@ The configuration is an object that looks like this:
       "open": true, // Open the terminal after executing its commands
       "focus": true, // Open the terminal after executing its commands and focus to it
       "execute": false, // Write the last command without executing it
+      "dynamicTitle": true, // Don't use the "name" as the title, let it be dynamic depending on the command being executed
 
       "onlySingle": true, // Don't run this with the `Terminals: Run` command
       "onlyMultiple": true, // Hide it from the `Terminals: Run Single` command
