@@ -1,3 +1,6 @@
+### Version 1.15.0
+- Added a "split" option for each terminal, it should be the name of a currently open terminal to split
+
 ### Version 1.14.0
 - New terminal option: "dynamicTitle", for letting the title of the terminal depend on the command currently being executed in it
 - Wait for the startup to finish before initializing
