@@ -19,7 +19,7 @@
     "url": "https://github.com/fabiospampinato/vscode-terminals"
   },
   "engines": {
-    "vscode": "^1.60.0"
+    "vscode": "^1.70.0"
   },
   "keywords": [
     "terminals",
@@ -131,7 +131,6 @@
     "vscode:prepublish": "rm -rf out && webpack --mode production",
     "compile": "webpack --mode development",
     "compile:watch": "webpack --mode development --watch",
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "node ./node_modules/vscode/bin/test"
   },
   "dependencies": {
@@ -147,9 +146,9 @@
     "vscode-beggar": "^1.0.1"
   },
   "devDependencies": {
+    "@types/vscode": "^1.70.0",
     "ts-loader": "^5.2.1",
     "typescript": "^4.5.5",
-    "vscode": "^1.1.37",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   }

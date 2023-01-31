@@ -74,6 +74,7 @@ The configuration is an object that looks like this:
       ],
 
       "target": "My Other Terminal",// Execute the commands in this terminal's instance
+      "split": "My Parent Terminal", // The name of the other (open) terminal to split from
       "persistent": "unique_session_name", // Keep the process running even when closing the terminal and reuse it, preservig the output. The unique session name will be passed to the terminal multiplexer
       "substitution": false, // Disable variable substitution for this terminal
       "recycle": false, // Always create a new terminal
