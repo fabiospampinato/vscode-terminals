@@ -43,7 +43,125 @@
         },
         "terminals.terminals": {
           "type": "array",
-          "description": "Array of terminals to open"
+          "description": "Array of terminals to open",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "autorun": {
+                "type": "boolean",
+                "description": "Execute the terminal automatically at startup or when the project is added to the workspace"
+              },
+              "autokill": {
+                "type": "boolean",
+                "description": "Kill the terminal when the project is removed from the workspace"
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the terminal, it will be displayed in the dropdown"
+              },
+              "description": {
+                "type": "string",
+                "description": "The description of the terminal"
+              },
+              "icon": {
+                "type": "string",
+                "description": "An icon to show next to the name"
+              },
+              "color": {
+                "type": "string",
+                "description": "A supported themeable color"
+              },
+              "cwd": {
+                "type": "string",
+                "description": "A path for the current working directory to be used for the terminal"
+              },
+              "command": {
+                "type": "string",
+                "description": "Single command to run"
+              },
+              "commands": {
+                "type": "array",
+                "description": "Multiple commands to run",
+                "items": {
+                  "type": "string"
+                 }
+              },
+              "persistent": {
+                "type": "string",
+                "description": "Keep the process running even when closing the terminal and reuse it, preservig the output. This unique session name will be passed to the terminal multiplexer"
+              },
+              "split": {
+                "type": "string",
+                "description": "The name of the other (open) terminal to split from"
+              },
+              "target": {
+                "type": "string",
+                "description": "Execute the commands in this terminal's instance"
+              },
+              "dynamicTitle": {
+                "type": "boolean",
+                "description": "Don't use the \"name\" as the title, let it be dynamic depending on the command being executed"
+              },
+              "execute": {
+                "type": "boolean",
+                "description": "Write the last command without executing it"
+              },
+              "focus": {
+                "type": "boolean",
+                "description": "Open the terminal after executing its commands and focus to it"
+              },
+              "open": {
+                "type": "boolean",
+                "description": "Open the terminal after executing its commands, but don't move the focus to it"
+              },
+              "recycle": {
+                "type": "boolean",
+                "description": "Always create a new terminal"
+              },
+              "onlyAPI": {
+                "type": "boolean",
+                "description": "Don't run this with the \"Terminals: Run\" command and hide it from the \"Terminals: Run Single\" command, useful when programmatically calling the \"terminals.runTerminalByName\" command"
+              },
+              "onlySingle": {
+                "type": "boolean",
+                "description": "Don't run this with the \"Terminals: Run\" command"
+              },
+              "onlyMultiple": {
+                "type": "boolean",
+                "description": "Hide it from the \"Terminals: Run Single\" command"
+              },
+              "env": {
+                "type": "object",
+                "description": "Object containing additional environment variables that will be applied to this terminal",
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "multiplexer": {
+                "type": "string",
+                "description": "The terminal multiplexer that this terminal will use, if persistent",
+                "enum": [
+                  "screen",
+                  "tmux"
+                ]
+              },
+              "shellPath": {
+                "type": "string",
+                "description": "Path to a custom shell executable"
+              },
+              "shellArgs": {
+                "type": "array",
+                "description": "Arguments to pass to the shell executable",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
       }
     },
