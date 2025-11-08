@@ -47,6 +47,9 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
+            "required": [
+              "name"
+            ],
             "properties": {
               "autorun": {
                 "type": "boolean",
