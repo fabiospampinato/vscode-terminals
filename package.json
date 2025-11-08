@@ -1,103 +1,49 @@
 {
   "name": "vscode-terminals",
   "displayName": "Terminals Manager",
+  "publisher": "fabiospampinato",
+  "repository": "github:fabiospampinato/vscode-terminals",
   "description": "An extension for setting-up multiple terminals at once, or just running some commands",
   "icon": "resources/logo-128x128.png",
   "version": "1.15.0",
-  "license": "MIT",
-  "main": "out/extension.js",
-  "publisher": "fabiospampinato",
-  "author": {
-    "name": "Fabio Spampinato",
-    "email": "spampinabio@gmail.com"
-  },
-  "bugs": {
-    "url": "https://github.com/fabiospampinato/vscode-terminals/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fabiospampinato/vscode-terminals"
-  },
-  "engines": {
-    "vscode": "^1.70.0"
-  },
-  "keywords": [
-    "terminals",
-    "manager",
-    "startup",
-    "setup",
-    "restore",
-    "command"
-  ],
-  "categories": [
-    "Other"
-  ],
+  "main": "dist/index.js",
   "activationEvents": [
     "onStartupFinished"
   ],
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "Terminals - Configuration",
+      "title": "Terminals Manager - Configuration",
       "properties": {
-        "terminals.configPath": {
-          "type": "string",
-          "description": "The location of the configuration file"
-        },
         "terminals.autorun": {
           "type": "boolean",
-          "description": "Execute `Terminals: Run` automatically at startup or when the project is added to the workspace",
-          "default": false
+          "description": "Execute terminals automatically at startup or when the project is added to the workspace"
         },
         "terminals.autokill": {
           "type": "boolean",
-          "description": "Kill all the terminals created from this configuration when the project is removed from the workspace",
-          "default": false
+          "description": "Kill all the terminals created from this configuration when the project is removed from the workspace"
         },
         "terminals.env": {
           "type": "object",
+          "description": " Object containing custom environment variables",
           "additionalProperties": {
             "type": [
               "string",
               "null"
             ]
-          },
-          "description": " Global environment variables that will be applied to all terminals",
-          "default": {}
-        },
-        "terminals.invertCommandsAndDescription": {
-          "type": "boolean",
-          "description": "Invert a terminal commands and description in the quickpick",
-          "default": false
-        },
-        "terminals.showCommands": {
-          "type": "boolean",
-          "description": "Show terminals' commands in the quickpick",
-          "default": false
-        },
-        "terminals.showDescriptions": {
-          "type": "boolean",
-          "description": "Show terminals' descriptions in the quickpick",
-          "default": true
-        },
-        "terminals.sortTerminals": {
-          "type": "boolean",
-          "description": "Sort terminals alphabetically",
-          "default": false
+          }
         },
         "terminals.multiplexer": {
           "type": "string",
+          "description": "The terminal multiplexer that persistent terminals will use",
           "enum": [
             "screen",
             "tmux"
-          ],
-          "description": "The terminal multiplexer to use for persistent terminals",
-          "default": "screen"
+          ]
         },
         "terminals.terminals": {
           "type": "array",
-          "description": "Array of terminals to open",
-          "default": []
+          "description": "Array of terminals to open"
         }
       }
     },
@@ -117,6 +63,10 @@
       {
         "command": "terminals.runTerminal",
         "title": "Terminals: Run Single"
+      },
+      {
+        "command": "terminals.runTerminalByName",
+        "title": "Terminals: Run Terminal By Name"
       }
     ],
     "keybindings": [
@@ -125,31 +75,51 @@
         "key": "ctrl+alt+t",
         "mac": "cmd+alt+t"
       }
-    ]
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "terminals.runTerminalByName",
+          "when": "false"
+        }
+      ]
+    }
   },
   "scripts": {
-    "vscode:prepublish": "rm -rf out && webpack --mode production",
-    "compile": "webpack --mode development",
-    "compile:watch": "webpack --mode development --watch",
-    "test": "node ./node_modules/vscode/bin/test"
+    "bundle:dev": "tsex bundle --external vscode --format cjs --platform node --no-declare",
+    "bundle:prod": "tsex bundle --external vscode --format cjs --platform node --minify",
+    "clean": "tsex clean",
+    "compile": "tsex compile",
+    "debug": "code --extensionDevelopmentPath $PWD --inspect-extensions 9222",
+    "package": "vsce package",
+    "prepublishOnly": "scex -bs clean bundle:prod",
+    "vscode:prepublish": "scex -bs clean bundle:prod",
+    "dev": "scex -bs bundle:dev debug",
+    "prod": "scex -bs bundle:prod debug"
   },
+  "categories": [
+    "Other"
+  ],
+  "engines": {
+    "vscode": "^1.87.0"
+  },
+  "keywords": [
+    "vscode",
+    "vsc",
+    "extension",
+    "terminals",
+    "manager"
+  ],
   "dependencies": {
-    "@types/lodash": "^4.14.118",
-    "@types/node": "^10.12.8",
-    "absolute": "0.0.1",
-    "conf-merge": "^1.0.0",
-    "json5": "^0.5.1",
-    "lodash": "^4.17.4",
-    "mkdirp": "^0.5.1",
-    "pify": "^3.0.0",
-    "untildify": "^3.0.3",
-    "vscode-beggar": "^1.0.1"
+    "tiny-jsonc": "^1.0.2",
+    "vscode-extras": "^1.9.0"
   },
   "devDependencies": {
-    "@types/vscode": "^1.70.0",
-    "ts-loader": "^5.2.1",
-    "typescript": "^4.5.5",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2"
+    "@types/node": "^18.19.130",
+    "@types/vscode": "^1.87.0",
+    "esbuild": "0.25.12",
+    "scex": "^1.1.0",
+    "tsex": "^4.0.2",
+    "typescript": "^5.9.3"
   }
 }

@@ -1,62 +1,119 @@
 
 /* IMPORT */
 
-import * as _ from 'lodash';
-import * as path from 'path';
-import * as vscode from 'vscode';
-import Utils from './utils';
-import { WorkspaceFolder } from 'vscode';
+import os from 'node:os';
+import path from 'node:path';
+import vscode from 'vscode';
+import {getActiveFilePath, getProjectRootPath} from 'vscode-extras';
+import {isArray, isObject, isString} from './utils';
+import type {SubstitutionsMap, SubstitutionsOptions} from './types';
 
-/* SUBSTITUTIONS */
+/* MAIN */
+
+//URL: https://code.visualstudio.com/docs/editor/variables-reference#_predefined-variables
 
 const Substitutions = {
 
-  get () {
+  apply: <T extends string | string[] | Record<string, string>>( target: T, substitutions: SubstitutionsMap ): T => {
 
-    const workspaceFolder = Utils.folder.getActiveRootPath () || '',
-          workspaceFolderBasename = path.basename ( workspaceFolder ),
-          file = _.get ( vscode.window.activeTextEditor, 'document.uri.fsPath' ) as string || '',
-          fileExtname = path.extname ( file ),
-          relativeFile = path.relative ( workspaceFolder, file ),
-          fileBasename = path.basename ( file ),
-          fileBasenameNoExtension = path.basename ( file, fileExtname ),
-          fileDirname = path.dirname ( file ),
-          cwd = workspaceFolder,
-          lineNumber = ( _.get ( vscode.window.activeTextEditor, 'selection.start.line' ) as number || 0 ) + 1;
+    if ( isArray ( target ) ) {
 
-    return {workspaceFolder, workspaceFolderBasename, file, relativeFile, fileBasename, fileBasenameNoExtension, fileDirname, fileExtname, cwd, lineNumber};
+      return Substitutions.applyToArray ( target, substitutions ) as T; //TSC
+
+    } else if ( isObject ( target ) ) {
+
+      return Substitutions.applyToObject ( target, substitutions ) as T; //TSC
+
+    } else if ( isString ( target ) ) {
+
+      return Substitutions.applyToString ( target as string, substitutions ) as T;
+
+    } else {
+
+      throw new Error ( 'Unsupported substitution target' );
+
+    }
 
   },
 
-  apply ( target, substitutions ) {
+  applyToArray: ( target: string[], substitutions: SubstitutionsMap ): string[] => {
 
-    if ( _.isArray ( target ) ) {
+    return target.map ( target => Substitutions.applyToString ( target, substitutions ) );
 
-      return target.map ( value => Substitutions.apply ( value, substitutions ) );
+  },
 
-    } else if ( _.isPlainObject ( target ) ) {
+  applyToObject: ( target: Record<string, string>, substitutions: SubstitutionsMap ): Record<string, string> => {
 
-      return _.reduce ( target, ( acc, value, key ) => {
+    const result: Record<string, string> = {};
 
-        acc[key] = Substitutions.apply ( value, substitutions );
+    for ( const key in target ) {
 
-        return acc;
+      result[key] = Substitutions.applyToString ( target[key], substitutions );
 
-      }, {} );
+    }
 
-    } else if ( _.isString ( target ) ) {
+    return result;
 
-      _.forOwn ( substitutions, ( value, key ) => {
+  },
 
-        const re = new RegExp ( `\\[${_.escapeRegExp ( key )}\\]`, 'g' );
+  applyToString: ( target: string, substitutions: SubstitutionsMap ): string => {
 
-        target = target.replace ( re, value );
+    for ( const [key, value] of Object.entries ( substitutions ) ) {
 
-      });
+      target = target.replaceAll ( `[${key}]`, value );
+      target = target.replaceAll ( `\${${key}}`, value );
 
     }
 
     return target;
+
+  },
+
+  get: ( options?: SubstitutionsOptions ): SubstitutionsMap => {
+
+    const {activeTextEditor} = vscode.window;
+    const activeFilePath = getActiveFilePath ();
+
+    const userHome = os.homedir ();
+    const workspaceFolder = options?.workspace ?? getProjectRootPath ( activeFilePath ) ?? '';
+    const workspaceFolderBasename = path.basename ( workspaceFolder );
+    const file = activeFilePath || '';
+    const fileWorkspaceFolder = getProjectRootPath ( activeFilePath ) ?? '';
+    const relativeFile = path.relative ( workspaceFolder, file );
+    const relativeFileDirname = path.dirname ( relativeFile );
+    const fileExtname = path.extname ( file );
+    const fileBasename = path.basename ( file );
+    const fileBasenameNoExtension = path.basename ( file, fileExtname );
+    const fileDirname = path.dirname ( file );
+    const fileDirnameBasename = path.basename ( fileDirname );
+    const cwd = options?.cwd ?? workspaceFolder;
+    const lineNumber = `${( activeTextEditor?.selection.start.line || 0 ) + 1}`;
+    const selectedText = activeTextEditor?.document.getText ( activeTextEditor.selection ) || '';
+    const execPath = process.execPath;
+    const defaultBuildTask = `${vscode.workspace.getConfiguration ().get ( 'tasks.build' ) || ''}`;
+    const pathSeparator = path.sep;
+
+    return {
+      userHome,
+      workspaceFolder,
+      workspaceFolderBasename,
+      file,
+      fileWorkspaceFolder,
+      relativeFile,
+      relativeFileDirname,
+      fileExtname,
+      fileBasename,
+      fileBasenameNoExtension,
+      fileDirname,
+      fileDirnameBasename,
+      cwd,
+      lineNumber,
+      selectedText,
+      execPath,
+      defaultBuildTask,
+      pathSeparator,
+      '/': pathSeparator
+    };
 
   }
 

@@ -6,9 +6,7 @@
 
 An extension for setting-up multiple terminals at once, or just running some commands.
 
-The extension is configured using a very easy to edit JSON file.
-
-Check the demo below to learn more.
+The extension is configured using a very easy to edit JSONC file.
 
 ## Install
 
@@ -23,49 +21,43 @@ ext install fabiospampinato.vscode-terminals
 It adds 4 new commands to the command palette:
 
 ```js
-Terminals: Edit Configuration // Open the configuration file, it will create it for you if needed
-Terminals: Kill // Kill all the terminals
-Terminals: Run // Run all the terminals
-Terminals: Run Single // Select a single terminal to run
+'Terminals: Edit Configuration' // Open the configuration file, or create it if it doesn't exist
+'Terminals: Kill' // Kill all the terminals
+'Terminals: Run' // Run all the terminals
+'Terminals: Run Single' // Select and run a single terminal
 ```
 
 It adds 1 shortcut:
 
 ```js
-'Cmd/Ctrl+Alt+T' // Triggers `Terminals: Run Single`
-```
-
-## Settings
-
-```js
-{
-  "terminals.invertCommandsAndDescription": false, // Invert a terminal commands and description in the quickpick
-  "terminals.showCommands": false, // Show terminals' commands in the quickpick
-  "terminals.showDescriptions": true, // Show terminals' descriptions in the quickpick
-  "terminals.sortTerminals": false, // Sort terminals alphabetically
-  "terminals.env": {}, // Global environment variables that will be applied to all terminals
-  "terminals.multiplexer": "screen" // The terminal multiplexer to use for persistent terminals, supported values are: "screen", "tmux"
-}
+'Cmd/Ctrl+Alt+T' // Triggers "Terminals: Run Single"
 ```
 
 ## Configuration
 
-Run the `Terminals: Edit Configuration` command to create the configuration file. By default it uses a file named `terminals.json` under the `.vscode` directory, you can change this by supplying a custom path using the `terminals.configPath` setting entry.
+Run the `Terminals: Edit Configuration` command to create the configuration file. It will create a file named `terminals.json` under the `.vscode` directory in your current open project.
 
-The configuration is an object that looks like this:
+The configuration is an object that looks like the following, most properties are optional:
 
 ```js
 {
-  "autorun": true, // Execute `Terminals: Run` automatically at startup or when the project is added to the workspace
+  // First of all some global options are supported that all terminals defined below will inherit from
+  "autorun": true, // Execute terminals automatically at startup or when the project is added to the workspace
   "autokill": true, // Kill all the terminals created from this configuration when the project is removed from the workspace
-  "env": { "name": "value" }, // Global environment variables that will be applied to all terminals
-  "terminals": [ // Array of terminals to open
+  "env": { "name": "value" }, // Object containing custom environment variables
+  "multiplexer": "screen", // The terminal multiplexer that persistent terminals will use, either "screen" or "tmux" are supported
+
+  // Then we define the actual terminals
+  "terminals": [
     { // An object describing a terminal, most entries are optional
+      "autorun": true, // Execute the terminal automatically at startup or when the project is added to the workspace
+      "autokill": true, // Kill the terminal when the project is removed from the workspace
 
       "name": "My Terminal", // The name of the terminal, it will be displayed in the dropdown
       "description": "A terminal that runs some commands", // The description of the terminal
-      "icon": "code", // An icon to show next to the name
-      "color": "terminal.ansiCyan", // A themeable color, ref: https://code.visualstudio.com/api/references/theme-color
+      "icon": "code", // An icon to show next to the name, ref: https://code.visualstudio.com/api/references/icons-in-labels#icon-listing
+      "color": "terminal.ansiCyan", // A supported themeable color, ref: https://code.visualstudio.com/api/references/theme-color#integrated-terminal-colors
+
       "cwd": "/Users/fabio/Desktop", // A path for the current working directory to be used for the terminal
       "command": "whoami", // Single command to run
       "commands": [ // Multiple commands to run
@@ -73,90 +65,42 @@ The configuration is an object that looks like this:
         "touch my_heart"
       ],
 
-      "target": "My Other Terminal",// Execute the commands in this terminal's instance
+      "persistent": "unique_session_name", // Keep the process running even when closing the terminal and reuse it, preservig the output. This unique session name will be passed to the terminal multiplexer
       "split": "My Parent Terminal", // The name of the other (open) terminal to split from
-      "persistent": "unique_session_name", // Keep the process running even when closing the terminal and reuse it, preservig the output. The unique session name will be passed to the terminal multiplexer
-      "substitution": false, // Disable variable substitution for this terminal
-      "recycle": false, // Always create a new terminal
-      "open": true, // Open the terminal after executing its commands
-      "focus": true, // Open the terminal after executing its commands and focus to it
-      "execute": false, // Write the last command without executing it
+      "target": "My Other Terminal",// Execute the commands in this terminal's instance
+
       "dynamicTitle": true, // Don't use the "name" as the title, let it be dynamic depending on the command being executed
+      "execute": false, // Write the last command without executing it
+      "focus": true, // Open the terminal after executing its commands and focus to it
+      "open": true, // Open the terminal after executing its commands, but don't move the focus to it
+      "recycle": false, // Always create a new terminal
 
-      "onlySingle": true, // Don't run this with the `Terminals: Run` command
-      "onlyMultiple": true, // Hide it from the `Terminals: Run Single` command
-      "onlyAPI": true, // Don't run this with the `Terminals: Run` command and hide it from the `Terminals: Run Single` command
+      "onlyAPI": true, // Don't run this with the "Terminals: Run" command and hide it from the "Terminals: Run Single" command, useful when programmatically calling the "terminals.runTerminalByName" command
+      "onlySingle": true, // Don't run this with the "Terminals: Run" command
+      "onlyMultiple": true, // Hide it from the "Terminals: Run Single" command
 
+      "env": { "name": "value" }, // Object containing additional environment variables that will be applied to this terminal
+      "multiplexer": "tmux", // The terminal multiplexer that this terminal will use, if persistent
       "shellPath": '/bin/bash', // Path to a custom shell executable
       "shellArgs": ["--foo"], // Arguments to pass to the shell executable
-      "env": { "name": "value" }, // Environment variables that will be applied to this terminal
-      "envInherit": false // Don't inherit global environment variables
-
     }
   ]
 }
 ```
 
-Environment variables are expected to be strings.
+## Details
 
-You can also define terminals in your Visual Studio Code settings file under the key `terminals.terminals`. This way you can have global terminals, which are always available, while still having the ability to add some project-specific terminals in your configuration file.
-
-## Persistent Terminals
-
-Persistent terminals are achieved by saving sessions, and reattaching to them, using your [terminal multiplexer](https://en.wikipedia.org/wiki/Terminal_multiplexer) of choice.
-
-The currently supported terminal multiplexers are [GNU Screen](https://en.wikipedia.org/wiki/GNU_Screen) and [tmux](https://en.wikipedia.org/wiki/Tmux).
-
-You must have the terminal multiplexer setted in the `terminals.multiplexer` setting installed in your system for this to work:
-  - **Linux/macOS**: your system probably comes with both `screen` and `tmux` installed by default.
-  - **Windows**: you can install them via [cygwin](http://www.cygwin.com) or [WSL](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux).
-
-**Note**: a terminal multiplexer usually modifies the way a terminal work. For instance `ctrl+a` usually means "go to the beginning of the line" inside a terminal, but inside `screen`, `ctrl+a` doesn't work this way. You might want to configure your terminal multiplexer to best suit your needs.
-
-**Note**: this is an experimental feature, you may encounter some bugs.
-
-## Variable Substitution
-
-This extension supports some special tokens that you can put in your configuration, they will be substituted with the appropriate value when you execute the terminal. This is especially useful for defining global terminals. Here they are:
-
-| Token                       | Value                                                                                  |
-|-----------------------------|----------------------------------------------------------------------------------------|
-| `[workspaceFolder]`         | The path of the workspace folder that contains the active file                         |
-| `[workspaceFolderBasename]` | The name of the workspace folder that contains the active file without any slashes (/) |
-| `[file]`                    | The current opened file                                                                |
-| `[relativeFile]`            | The current opened file relative to the workspace folder containing the file           |
-| `[fileBasename]`            | The current opened file's basename                                                     |
-| `[fileBasenameNoExtension]` | The current opened file's basename without the extension                               |
-| `[fileDirname]`             | The current opened file's dirname                                                      |
-| `[fileExtname]`             | The current opened file's extension                                                    |
-| `[cwd]`                     | The current working directory on startup                                               |
-| `[lineNumber]`              | The current selected line number in the active file                                    |
-
-## Demo
-
-#### Edit Configuration + Run
-
-![Run](resources/run.gif)
-
-#### Run Single
-
-![Run Single](resources/run_single.gif)
-
-### Persistent
-
-![Persistent](resources/persistent.gif)
-
-## Hints
-
-- **[Commands](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-commands)**: Use this other extension, the `terminals.runTerminalByName` command and, optionally, the `onlyAPI` configuration option to create terminals that can be run with a click from the statusbar.
+- **Autorun/Autokill**: these features allow the extension to automatically run and kill terminals so that you don't have to explicitly run any command to set a project up after opening it, just opening it will be enough. It's an optional feature that you may not need at all, but that may be convenient to you.
+- **Global-level terminals**: you can also define additional global-level terminals in your VSCode settings files, that will be available in every project, using the same exact configuration format, but basically prefixing every top-level key with `terminals.`, so `terminals.autorun`, `termunals.terminals` etc., the rest stays unchanged.
+- **Multiplexer-level persistence**: a basic form of multiplexer-based persistance is supported, via either [GNU Screen](https://en.wikipedia.org/wiki/GNU_Screen) or [tmux](https://en.wikipedia.org/wiki/Tmux), which will persist terminals even if you close vscode, and it will reattach to them when you reopen vscode. For it to work you need to respectively have the `screen` or `tmux` commands already installed in your system.
+- **Native-level persistence**: VSCode supports persisting terminals nativelly. To avoid conflicts this feature is automatically disabled for terminals created by this extension, and you might want to disable it globally as well, by setting the `terminal.integrated.persistentSessionReviveProcess` setting to `never`.
+- **Variable substitution**: all the variables defined [here](https://code.visualstudio.com/docs/reference/variables-reference) can be substituted in your configuration, by writing for example `[userHome]` or `${userHome}` somewhere. Variable substitution is supported for the following configuration properties only: `description`, `cwd`, `command`, `command`, `env`.
+- **Tilde substitution**: paths starting with a tilde, like `~/Dekstop` are also supported, the tilde will be automatically resolved. This is supported for the following configuration properties only: `cwd`, `shellPath`.
+- **JSONC support**: the configuration file supports comments and trailing commas, as it's read as a JSONC file, even though the extension will be `.json` for legacy reasons.
+- **Icons**: all the supported icons, that you can use for the optional `icon` property of each terminal, are listed [here](https://code.visualstudio.com/api/references/icons-in-labels#icon-listing).
+- **Colors**: all the supported colors, that you can use for the optional `color` property of each terminal, are listed [here](https://code.visualstudio.com/api/references/theme-color#integrated-terminal-colors).
+- **Programmatic execution**: you can also execute a terminal programmatically, from other extensions, for example my [Commands](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-commands) extension, by calling the `terminals.runTerminalByName` command and passing the terminal name as argument.
 - **Self-destroying terminals**: it's a common use case to run some commands and then close the terminal, to do this simply put an `exit 0` command at the end of your commands list.
-- **Icons**: [here](https://octicons.github.com/) you can browse a list of supported icons. If for instance you click the first icon, you'll get a page with `.octicon-alert` written in it, to get the string to use simply remove the `.octicon-` part, so in this case the icon name would be `alert`.
-
-## Contributing
-
-If you found a problem, or have a feature request, please open an [issue](https://github.com/fabiospampinato/vscode-terminals/issues) about it.
-
-If you want to make a pull request you can debug the extension using [Debug Launcher](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-debug-launcher).
 
 ## License
 

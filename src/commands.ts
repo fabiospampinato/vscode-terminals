@@ -1,130 +1,77 @@
 
 /* IMPORT */
 
-import * as _ from 'lodash';
-import * as vscode from 'vscode';
-import Config from './config';
-import run from './run';
-import Substitutions from './substitutions';
-import Utils from './utils';
+import fs from 'node:fs';
+import path from 'node:path';
+import vscode from 'vscode';
+import {alert, openInEditor, prompt} from 'vscode-extras';
+import {DEFAULT_CONFIG} from './constants';
+import {INSTANCE_TO_WORKSPACE} from './runner';
+import Runner from './runner';
+import {getConfigPath, getGroups, getGroupsFromExternalConfig, getGroupsQuickPickItems} from './utils';
+import type {Terminal, TerminalQuickPickItem} from './types';
 
-/* COMMANDS */
+/* MAIN */
 
-async function runTerminals ( rootPath?: string, substitutions? ) {
+const autorunTerminalsByWorkspace = async ( workspacePath: string ): Promise<void> => {
 
-  const config = await Config.get ( rootPath ),
-        terminals = config.terminals.filter ( terminal => terminal.onlyAPI !== true && terminal.onlySingle !== true );
+  const groups = getGroupsFromExternalConfig ( workspacePath );
+  const filterer = ( terminal: Terminal ): boolean => terminal.autorun && !terminal.onlyAPI && !terminal.onlySingle;
+  const items = getGroupsQuickPickItems ( groups, filterer );
 
-  if ( !terminals.length ) vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
+  if ( !items.length ) return;
 
-  substitutions = substitutions || Substitutions.get ();
+  runTerminalsItems ( items );
 
-  const terms = ( await Promise.all ( terminals.map ( terminal => run ( terminal, config, rootPath, substitutions ) ) ) ).filter ( _.identity ),
-        term = terms.find ( ({ __terminal }) => __terminal.open || __terminal.focus  ) as vscode.Terminal;
+};
 
-  if ( !term ) return;
+const autokillTerminalsByWorkspace = async ( workspacePath: string ): Promise<void> => {
 
-  term.show ( !term['__terminal'].focus );
+  for ( const [instance, workspace] of INSTANCE_TO_WORKSPACE ) {
 
-}
+    if ( workspace !== workspacePath ) continue;
 
-async function runTerminal () {
+    Runner.unrun ( instance );
 
-  const config = await Config.get (),
-        terminals = config.terminals.filter ( terminal => terminal.onlyAPI !== true && terminal.onlyMultiple !== true );
+  }
 
-  if ( !terminals.length ) return vscode.window.showErrorMessage ( 'No terminals defined, edit the configuration' );
+};
 
-  const {items} = Utils.ui.makeItems ( config, {terminals}, Utils.ui.makeQuickPickItem ),
-        selected = await vscode.window.showQuickPick ( items, { placeHolder: 'Select a terminal...' } );
+const editConfig = (): void => {
 
-  if ( !selected ) return;
+  const configPath = getConfigPath ();
 
-  runTerminalByName ( selected.obj.name );
+  if ( !configPath ) return alert.error ( 'You have to open a project before being able to edit its configuration' );
 
-}
+  const hasConfigFile = fs.existsSync ( configPath );
 
-async function runTerminalByName ( name ) {
+  if ( hasConfigFile ) { // Open
 
-  const config = await Config.get (),
-        terminal = config.terminals.find ( terminal => terminal.name === name );
+    openInEditor ( configPath );
 
-  if ( !terminal ) return;
+  } else { // Init + Open
 
-  const term = await run ( terminal, config );
+    initConfig ();
+    openInEditor ( configPath );
 
-  if ( !term || ( !terminal.open && !terminal.focus ) ) return;
+  }
 
-  term.show ( !terminal.focus );
+};
 
-}
+const initConfig = (): void => {
 
-async function initConfig () {
+  const configPath = getConfigPath ();
 
-  const config = await Config.get ();
-  const defaultConfig = {
-    autorun: false,
-    terminals: [{
-      name: 'Single',
-      description: 'This is a description',
-      focus: true,
-      command: 'echo "Hello World"'
-    }, {
-      name: 'Multi',
-      commands: [
-        'echo "Did you know?"',
-        'echo "You can execute multiple commands"'
-      ]
-    }, {
-      name: 'Single - No execution',
-      execute: false,
-      command: 'Press enter to run me',
-    }, {
-      name: 'Multi - No execution',
-      execute: false,
-      commands: [
-        'echo "Only the last command won\'t be executed"',
-        'Press enter to run me'
-      ]
-    }, {
-      name: 'Persistent',
-      focus: true,
-      onlySingle: true,
-      persistent: 'demo_persistent',
-      command: 'echo "I\'m persistent! Try to reload the window and re-execute this command"'
-    }, {
-      name: 'Variable Substitution',
-      description: 'Many special strings can be substituted dynamically',
-      command: "echo \"workspaceFolder: [workspaceFolder]\\nworkspaceFolderBasename: [workspaceFolderBasename]\\nfile: [file]\\nrelativeFile: [relativeFile]\\nfileBasename: [fileBasename]\\nfileBasenameNoExtension: [fileBasenameNoExtension]\\nfileDirname: [fileDirname]\\nfileExtname: [fileExtname]\\ncwd: [cwd]\\nlineNumber: [lineNumber]\""
-    }, {
-      name: 'Only Single',
-      open: true,
-      onlySingle: true,
-      command: 'echo "I will not run with the others"'
-    }]
-  };
-  const content = JSON.stringify ( defaultConfig, undefined, 2 );
+  if ( !configPath ) return alert.error ( 'You have to open a project before being able to initialize its configuration' );
 
-  return Utils.file.make ( config.configPath, content );
+  const config = JSON.stringify ( DEFAULT_CONFIG, null, 2 );
 
-}
+  fs.mkdirSync ( path.dirname ( configPath ), { recursive: true } );
+  fs.writeFileSync ( configPath, config );
 
-async function editConfig () {
+};
 
-  const rootPath = Utils.folder.getActiveRootPath ();
-
-  if ( !rootPath ) return vscode.window.showErrorMessage ( 'You have to open a project before being able to edit its configuration' );
-
-  const config = await Config.get (),
-        hasFile = !!( await Utils.file.read ( config.configPath ) );
-
-  if ( !hasFile ) await initConfig ();
-
-  return Utils.file.open ( config.configPath );
-
-}
-
-async function kill () {
+const kill = (): void => {
 
   for ( let i = 0, l = 25; i < l; i++ ) {
 
@@ -132,8 +79,68 @@ async function kill () {
 
   }
 
-}
+};
+
+const runTerminal = async (): Promise<void> => {
+
+  const groups = getGroups ();
+  const filterer = ( terminal: Terminal ): boolean => !terminal.onlyAPI && !terminal.onlyMultiple;
+  const items = getGroupsQuickPickItems ( groups, filterer );
+
+  if ( !items.length ) return alert.error ( 'No terminals defined, edit the configuration' );
+
+  const item = await prompt.select ( 'Select a terminal...', items );
+
+  if ( !item ) return;
+
+  runTerminalsItems ([ item ]);
+
+};
+
+const runTerminalByName = async ( name: string ): Promise<void> => {
+
+  const groups = getGroups ();
+  const filterer = ( terminal: Terminal ): boolean => terminal.name === name;
+  const items = getGroupsQuickPickItems ( groups, filterer );
+
+  if ( !items.length ) return alert.error ( `No terminal found with the name: "${name}"` );
+
+  runTerminalsItems ([ items[0] ]);
+
+};
+
+const runTerminals = async (): Promise<void> => {
+
+  const groups = getGroups ();
+  const filterer = ( terminal: Terminal ): boolean => !terminal.onlyAPI && !terminal.onlySingle;
+  const items = getGroupsQuickPickItems ( groups, filterer );
+
+  if ( !items.length ) return alert.error ( 'No terminals defined, edit the configuration' );
+
+  runTerminalsItems ( items );
+
+};
+
+const runTerminalsItems = async ( items: TerminalQuickPickItem[] ): Promise<void> => {
+
+  const terminals = items.map ( item => item.terminal );
+  const instances = await Promise.all ( terminals.map ( Runner.run ) );
+  const terminalIndex = terminals.findIndex ( terminal => terminal.open || terminal.focus );
+
+  if ( terminalIndex < 0 ) return;
+
+  const terminal = terminals[terminalIndex];
+  const instance = instances[terminalIndex];
+
+  if ( !terminal || !instance ) return;
+
+  instance.show ( !terminal.focus );
+
+};
 
 /* EXPORT */
 
-export {runTerminals, runTerminal, runTerminalByName, initConfig, editConfig, kill};
+export {autorunTerminalsByWorkspace, autokillTerminalsByWorkspace};
+export {editConfig, initConfig};
+export {kill};
+export {runTerminal, runTerminalByName, runTerminals, runTerminalsItems};

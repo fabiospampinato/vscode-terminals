@@ -1,220 +1,297 @@
 
 /* IMPORT */
 
-import * as _ from 'lodash';
-import * as absolute from 'absolute';
-import * as fs from 'fs';
-import * as mkdirp from 'mkdirp';
-import * as path from 'path';
-import * as pify from 'pify';
-import * as vscode from 'vscode';
-import * as Commands from './commands';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import JSONC from 'tiny-jsonc';
+import Substitutions from './substitutions';
+import {getConfig, getProjectRootPath, getProjectRootPaths} from 'vscode-extras';
+import type {Env, Group, Multiplexer, Terminal, TerminalQuickPickItem} from './types';
 
-/* UTILS */
+/* MAIN */
 
-const Utils = {
+const attempt = <T> ( fn: () => T ): T | undefined => {
 
-  initCommands ( context: vscode.ExtensionContext ) {
+  try {
 
-    /* CONTRIBUTIONS */
+    return fn ();
 
-    const {commands} = vscode.extensions.getExtension ( 'fabiospampinato.vscode-terminals' ).packageJSON.contributes;
+  } catch {
 
-    commands.forEach ( ({ command, title }) => {
+    return;
 
-      const commandName = _.last ( command.split ( '.' ) ) as string,
-            handler = Commands[commandName],
-            disposable = vscode.commands.registerCommand ( command, () => handler () );
+  }
 
-      context.subscriptions.push ( disposable );
+};
 
-    });
+const delay = ( ms: number ): Promise<void> => {
 
-    /* HARD CODED */
+  return new Promise ( resolve => setTimeout ( resolve, ms ) );
 
-    ['terminals.runTerminalByName'].forEach ( command => {
+};
 
-      const commandName = _.last ( command.split ( '.' ) ) as string,
-            handler = Commands[commandName],
-            disposable = vscode.commands.registerCommand ( command, handler );
+const getConfigPath = ( rootPath?: string ): string | undefined => {
 
-      context.subscriptions.push ( disposable );
+  rootPath ||= getProjectRootPath ();
 
-    });
+  if ( !rootPath ) return;
 
-    return Commands;
+  const configPath = path.join ( rootPath, '.vscode', 'terminals.json' );
 
-  },
+  return configPath;
 
-  delay ( ms ) {
+};
 
-    return new Promise ( resolve => setTimeout ( resolve, ms ) );
+const getEnvFromUnknown = ( value: unknown ): Env => {
 
-  },
+  if ( !isObject ( value ) ) return {};
 
-  file: {
+  const env: Env = {};
 
-    open ( filepath, isTextDocument = true ) {
+  for ( const key in value ) {
 
-      filepath = path.normalize ( filepath );
+    const val = value[key];
 
-      const fileuri = vscode.Uri.file ( filepath );
+    if ( isNil ( val ) ) continue;
 
-      if ( isTextDocument ) {
+    env[key] = `${val}`;
 
-        return vscode.workspace.openTextDocument ( fileuri )
-                               .then ( doc => vscode.window.showTextDocument ( doc, { preview: false } ) );
+  }
 
-      } else {
+  return env;
 
-        return vscode.commands.executeCommand ( 'vscode.open', fileuri );
+};
 
-      }
+const getGroupFromUnknown = ( value: unknown, workspace?: string ): Group | undefined => {
 
-    },
+  if ( !isObject ( value ) ) return;
 
-    async make ( filepath, content ) {
+  const autorun = isBoolean ( value['autorun'] ) ? value['autorun'] : false;
+  const autokill = isBoolean ( value['autokill'] ) ? value['autokill'] : false;
+  const env = isObject ( value['env'] ) ? getEnvFromUnknown ( value['env'] ) : {};
+  const multiplexer = value['multiplexer'] === 'screen' || value['multiplexer'] === 'tmux' ? value['multiplexer'] : undefined;
+  const group: Group = { autorun, autokill, env, multiplexer, workspace, terminals: [] };
+  const terminals = isArray ( value['terminals'] ) ? value['terminals'].map ( terminal => getTerminalFromUnknown ( terminal, group ) ).filter ( isTruthy ) : [];
 
-      await pify ( mkdirp )( path.dirname ( filepath ) );
+  return {
+    autorun,
+    autokill,
+    env,
+    multiplexer,
+    workspace,
+    terminals
+  };
 
-      return Utils.file.write ( filepath, content );
+};
 
-    },
+const getGroupQuickPickItems = ( group: Group, filterer?: ( terminal: Terminal ) => boolean ): TerminalQuickPickItem[] => {
 
-    async read ( filepath ) {
+  const terminals = filterer ? group.terminals.filter ( filterer ) : group.terminals;
+  const items = terminals.map ( getTerminalQuickPickItem );
 
-      try {
-        return (  await pify ( fs.readFile )( filepath, { encoding: 'utf8' } ) ).toString ();
-      } catch ( e ) {
-        return;
-      }
+  return items;
 
-    },
+};
 
-    async write ( filepath, content ) {
+const getGroups = (): Group[] => {
 
-      return pify ( fs.writeFile )( filepath, content, {} );
+  const internalGroups = getGroupsFromInternalConfig ();
+  const externalGroups = getGroupsFromExternalConfigs ();
+  const groups = [...internalGroups, ...externalGroups];
 
-    }
+  return groups;
 
-  },
+};
 
-  folder: {
+const getGroupsFromInternalConfig = (): Group[] => {
 
-    getRootPath ( basePath? ) {
+  const workspace = getProjectRootPath ();
+  const config = getConfig ( 'terminals' );
+  const group = getGroupFromUnknown ( config, workspace );
+  const groups = group ? [group] : [];
 
-      const {workspaceFolders} = vscode.workspace;
+  return groups;
 
-      if ( !workspaceFolders ) return;
+};
 
-      const firstRootPath = workspaceFolders[0].uri.fsPath;
+const getGroupsFromExternalConfig = ( rootPath?: string ): Group[] => {
 
-      if ( !basePath || !absolute ( basePath ) ) return firstRootPath;
+  const workspace = rootPath ?? getProjectRootPath ();
+  const configPath = getConfigPath ( rootPath );
+  const configContent = attempt ( () => configPath && fs.readFileSync ( configPath, 'utf8' ) );
+  const configParsed = attempt ( () => configContent && JSONC.parse ( configContent ) );
+  const group = getGroupFromUnknown ( configParsed, workspace );
+  const groups = group ? [group] : [];
 
-      const rootPaths = workspaceFolders.map ( folder => folder.uri.fsPath ),
-            sortedRootPaths = _.sortBy ( rootPaths, [path => path.length] ).reverse (); // In order to get the closest root
+  return groups;
 
-      return sortedRootPaths.find ( rootPath => basePath.startsWith ( rootPath ) );
+};
 
-    },
+const getGroupsFromExternalConfigs = ( rootPaths?: string[] ): Group[] => {
 
-    getActiveRootPath () {
+  rootPaths ??= getProjectRootPaths ();
 
-      const {activeTextEditor} = vscode.window,
-            editorPath = activeTextEditor && activeTextEditor.document.uri.fsPath;
+  return rootPaths.flatMap ( getGroupsFromExternalConfig );
 
-      return Utils.folder.getRootPath ( editorPath );
+};
 
-    }
+const getGroupsQuickPickItems = ( groups: Group[], filterer?: ( terminal: Terminal ) => boolean ): TerminalQuickPickItem[] => {
 
-  },
+  return groups.flatMap ( group => getGroupQuickPickItems ( group, filterer ) );
 
-  config: {
+};
 
-    walkTerminals ( obj, terminalCallback, sortTerminals ) {
+const getMultiplexerReattachCommand = ( multiplexer: Multiplexer, session: string ): string => {
 
-      if ( obj.terminals ) {
+  if ( multiplexer === 'screen' ) {
 
-        const terminals = sortTerminals ? _.sortBy ( obj.terminals, terminal => terminal['name'].toLowerCase () ) : obj.terminals;
+    return `screen -D -R ${session}`;
 
-        terminals.forEach ( terminal => {
+  } else if ( multiplexer === 'tmux' ) {
 
-          terminalCallback ( terminal, obj );
+    return `tmux attach -t ${session} || tmux new -s ${session}`;
 
-        });
+  } else {
 
-      }
+    throw new Error ( 'Unsupported multiplexer' );
 
-    }
+  }
 
-  },
+};
 
-  ui: {
+const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | undefined => {
 
-    makeItems ( config, obj, itemMaker: Function ) {
+  if ( !isObject ( value ) ) return;
 
-      /* VARIABLES */
+  const workspace = group.workspace;
 
-      const items = [];
+  const substitutionsPartial = Substitutions.get ({ workspace });
+  const substitutePartial = ( value: string ) => Substitutions.apply ( value, substitutionsPartial );
+  const cwd = isString ( value['cwd'] ) ? untildify ( substitutePartial ( value['cwd'] ) ) : workspace;
 
-      let terminalsNr = 0;
+  const substitutions = Substitutions.get ({ workspace, cwd });
+  const substitute = <T extends string | string[] | Record<string, string>> ( value: T ) => Substitutions.apply ( value, substitutions );
 
-      /* ITEMS */
+  const autorun = isBoolean ( value['autorun'] ) ? value['autorun'] : group.autorun;
+  const autokill = isBoolean ( value['autokill'] ) ? value['autokill'] : group.autokill;
 
-      Utils.config.walkTerminals ( obj, terminal => {
+  const name = isString ( value['name'] ) ? value['name'] : undefined;
+  const description = isString ( value['description'] ) ? substitute ( value['description'] ) : undefined;
+  const icon = isString ( value['icon'] ) ? value['icon'] : undefined;
+  const color = isString ( value['color'] ) ? value['color'] : undefined;
 
-        items.push ( itemMaker ( config, terminal ) );
+  const persistent = isString ( value['persistent'] ) ? value['persistent'] : undefined;
+  const split = isString ( value['split'] ) ? value['split'] : undefined;
+  const target = isString ( value['target'] ) ? value['target'] : undefined;
 
-        terminalsNr++;
+  const dynamicTitle = isBoolean ( value['dynamicTitle'] ) ? value['dynamicTitle'] : false;
+  const execute = isBoolean ( value['execute'] ) ? value['execute'] : true;
+  const focus = isBoolean ( value['focus'] ) ? value['focus'] : false;
+  const open = isBoolean ( value['open'] ) ? value['open'] : false;
+  const recycle = isBoolean ( value['recycle'] ) ? value['recycle'] : false;
 
-      }, config.sortTerminals );
+  const onlyAPI = isBoolean ( value['onlyAPI'] ) ? value['onlyAPI'] : false;
+  const onlySingle = isBoolean ( value['onlySingle'] ) ? value['onlySingle'] : false;
+  const onlyMultiple = isBoolean ( value['onlyMultiple'] ) ? value['onlyMultiple'] : false;
 
-      return {items, terminalsNr};
+  const env = isObject ( value['env'] ) ? substitute ( getEnvFromUnknown ({ ...group.env, ...value['env'] }) ) : substitute ( getEnvFromUnknown ( group['env'] ) );
+  const multiplexer = value['multiplexer'] === 'screen' || value['multiplexer'] === 'tmux' ? value['multiplexer'] : group.multiplexer;
+  const shellPath = isString ( value['shellPath'] ) ? substitute ( untildify ( value['shellPath'] ) ) : undefined;
+  const shellArgs = isArray ( value['shellArgs'] ) && value['shellArgs'].every ( isString ) ? value['shellArgs'].map ( substitute ) : [];
 
-    },
+  const commandsMultiplexer = ( multiplexer && persistent ) ? [getMultiplexerReattachCommand ( multiplexer, persistent )] : [];
+  const commandsStandalone = isString ( value['command'] ) ? [value['command']] : [];
+  const commandsMultiple = isArray ( value['commands'] ) && value['commands'].every ( isString ) ? value['commands'] : [];
+  const commands = substitute ([ ...commandsMultiplexer, ...commandsStandalone, ...commandsMultiple ]);
 
-    makeQuickPickItem ( config, obj ) {
+  if ( !name ) return;
 
-      const icon = obj.icon ? `$(${obj.icon}) ` : '',
-            name = `${icon}${obj.name}`,
-            description = config.showDescriptions && obj.description,
-            commands =  _.castArray ( obj.commands || [] );
+  return {
+    autorun, autokill,
+    name, description, icon, color,
+    workspace, cwd, commands,
+    persistent, split, target,
+    dynamicTitle, recycle, open, focus, execute,
+    onlyAPI, onlySingle, onlyMultiple,
+    env, multiplexer, shellPath, shellArgs
+  };
 
-      if ( obj.command ) commands.unshift ( obj.command );
+};
 
-      const commandsStr = config.showCommands ? commands.join ( ' && ' ) : '',
-            topDetail = config.invertCommandsAndDescription ? description : commandsStr,
-            bottomDetail = config.invertCommandsAndDescription ? commandsStr : description;
+const getTerminalQuickPickItem = ( terminal: Terminal ): TerminalQuickPickItem => {
 
-      return {
-        obj,
-        label: name,
-        description: topDetail,
-        detail: bottomDetail
-      };
+  const icon = terminal.icon ? `$(${terminal.icon}) ` : '';
+  const label = `${icon}${terminal.name}`;
+  const description = terminal.description;
 
-    }
+  return {
+    label,
+    description,
+    terminal
+  };
 
-  },
+};
 
-  multiplexer: {
+const isArray = ( value: unknown ): value is unknown[] => {
 
-    reattach ( multiplexer, session ) {
+  return Array.isArray ( value );
 
-      switch ( multiplexer ) {
+};
 
-        case 'screen':
-          return `screen -D -R ${session}`;
+const isBoolean = ( value: unknown ): value is boolean => {
 
-        case 'tmux':
-          return `tmux attach -t ${session} || tmux new -s ${session}`;
+  return typeof value === 'boolean';
 
-        default:
-          throw new Error ( 'Unsupported multiplexer' );
+};
 
-      }
+const isNil = ( value: unknown ): value is null | undefined => {
 
-    }
+  return value === null || value === undefined;
+
+};
+
+const isNumber = ( value: unknown ): value is number => {
+
+  return typeof value === 'number';
+
+};
+
+const isObject = ( value: unknown ): value is Record<string, unknown> => {
+
+  return typeof value === 'object' && value !== null;
+
+};
+
+const isString = ( value: unknown ): value is string => {
+
+  return typeof value === 'string';
+
+};
+
+const isTruthy = <T> ( value: T ): value is Exclude<T, 0 | -0 | 0n | -0n | '' | false | null | undefined | void> => {
+
+  return !!value;
+
+};
+
+const isUndefined = ( value: unknown ): value is undefined => {
+
+  return typeof value === 'undefined';
+
+};
+
+const untildify = ( filePath: string ): string => {
+
+  if ( filePath.startsWith ( '~' ) ) {
+
+    const homedir = os.homedir ();
+
+    return path.join ( homedir, filePath.slice ( 1 ) );
+
+  } else {
+
+    return filePath;
 
   }
 
@@ -222,4 +299,11 @@ const Utils = {
 
 /* EXPORT */
 
-export default Utils;
+export {getConfigPath};
+export {getEnvFromUnknown};
+export {getGroupFromUnknown, getGroupQuickPickItems};
+export {getGroups, getGroupsFromInternalConfig, getGroupsFromExternalConfig, getGroupsFromExternalConfigs, getGroupsQuickPickItems};
+export {getMultiplexerReattachCommand};
+export {getTerminalFromUnknown, getTerminalQuickPickItem};
+export {attempt, delay, isArray, isBoolean, isNil, isNumber, isObject, isString, isTruthy, isUndefined};
+export {untildify};
