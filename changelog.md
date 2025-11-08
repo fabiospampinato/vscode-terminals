@@ -1,3 +1,25 @@
+### Version 2.0.0
+- Rewritten: more modern code, no third-party dependencies, 99% smaller bundle
+- Removed donation popup, thank you for your support!
+- Removed `configPath` global option, for simplicity
+- Removed `invertCommandsAndDescription` global option, for simplicity
+- Removed `showCommands` global option, for simplicity
+- Removed `showDescriptions` global option, for simplicity
+- Removed `sortTerminals` global option, for simplicity
+- Added `multiplexer` global option, which terminals inherit
+- Removed `substitution` terminal option, for simplicity
+- Removed `envInherit` terminal option, for simplicity
+- Added `autorun` terminal option, for overriding the inherited global option
+- Added `autokill` terminal option, for overriding the inherited global option
+- Added variable substitution support for all the variables listed [here](https://code.visualstudio.com/docs/reference/variables-reference#_predefined-variables)
+- Added variable substitution that references environment variables, by using the syntax `[env:key]`
+- Added variable substitution support with the `${foo}` syntax, other than the already supported `[foo]` syntax
+- Added variable substitution support for the `description` and `shellArgs` properties
+- Automatically disabling vscode-level terminal persistence for terminals created by this extension, as it conflicts with our own
+- Ensuring the `terminals.json` file is handled as JSONC, despite the legacy `.json` extension
+- Ensuring `terminals.json` files are matched against a schema
+- Ensuring terminals defined in vscode's settings are matched against a schema
+
 ### Version 1.15.0
 - Added a "split" option for each terminal, it should be the name of a currently open terminal to split
 
