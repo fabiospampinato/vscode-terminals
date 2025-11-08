@@ -192,6 +192,12 @@
         "title": "Terminals: Run Terminal By Name"
       }
     ],
+    "jsonValidation": [
+      {
+        "fileMatch": ["terminals.json"],
+        "url": "./resources/terminals-schema.json"
+      }
+    ],
     "keybindings": [
       {
         "command": "terminals.runTerminal",
