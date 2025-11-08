@@ -167,10 +167,12 @@ const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | unde
   const workspace = group.workspace;
 
   const substitutionsPartial = Substitutions.get ({ workspace });
-  const substitutePartial = ( value: string ) => Substitutions.apply ( value, substitutionsPartial );
-  const cwd = isString ( value['cwd'] ) ? untildify ( substitutePartial ( value['cwd'] ) ) : workspace;
+  const substitutePartial = <T extends string | string[] | Record<string, string>> ( value: T ) => Substitutions.apply ( value, substitutionsPartial );
 
-  const substitutions = Substitutions.get ({ workspace, cwd });
+  const cwd = isString ( value['cwd'] ) ? untildify ( substitutePartial ( value['cwd'] ) ) : workspace;
+  const env = isObject ( value['env'] ) ? substitutePartial ( getEnvFromUnknown ({ ...group.env, ...value['env'] }) ) : substitutePartial ( getEnvFromUnknown ( group['env'] ) );
+
+  const substitutions = Substitutions.get ({ workspace, cwd, env });
   const substitute = <T extends string | string[] | Record<string, string>> ( value: T ) => Substitutions.apply ( value, substitutions );
 
   const autorun = isBoolean ( value['autorun'] ) ? value['autorun'] : group.autorun;
@@ -195,7 +197,6 @@ const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | unde
   const onlySingle = isBoolean ( value['onlySingle'] ) ? value['onlySingle'] : false;
   const onlyMultiple = isBoolean ( value['onlyMultiple'] ) ? value['onlyMultiple'] : false;
 
-  const env = isObject ( value['env'] ) ? substitute ( getEnvFromUnknown ({ ...group.env, ...value['env'] }) ) : substitute ( getEnvFromUnknown ( group['env'] ) );
   const multiplexer = value['multiplexer'] === 'screen' || value['multiplexer'] === 'tmux' ? value['multiplexer'] : group.multiplexer;
   const shellPath = isString ( value['shellPath'] ) ? substitute ( untildify ( value['shellPath'] ) ) : undefined;
   const shellArgs = isArray ( value['shellArgs'] ) && value['shellArgs'].every ( isString ) ? value['shellArgs'].map ( substitute ) : [];

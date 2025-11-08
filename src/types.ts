@@ -31,7 +31,7 @@ type Multiplexer = (
   'tmux'
 );
 
-type SubstitutionsMap = {
+type SubstitutionsMap = SubstitutionsEnvMap & {
   userHome: string,
   workspaceFolder: string,
   workspaceFolderBasename: string,
@@ -53,9 +53,14 @@ type SubstitutionsMap = {
   '/': string
 };
 
+type SubstitutionsEnvMap = {
+  [K in `env:${string}`]: string
+};
+
 type SubstitutionsOptions = {
   workspace?: string,
-  cwd?: string
+  cwd?: string,
+  env?: Env
 };
 
 type Terminal = {
@@ -101,4 +106,4 @@ type TerminalQuickPickItem = vscode.QuickPickItem & {
 
 /* EXPORT */
 
-export type {Env, Group, GroupRaw, GroupQuickPickItem, Multiplexer, SubstitutionsMap, SubstitutionsOptions, Terminal, TerminalRaw, TerminalQuickPickItem};
+export type {Env, Group, GroupRaw, GroupQuickPickItem, Multiplexer, SubstitutionsMap, SubstitutionsEnvMap, SubstitutionsOptions, Terminal, TerminalRaw, TerminalQuickPickItem};

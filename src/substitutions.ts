@@ -6,7 +6,7 @@ import path from 'node:path';
 import vscode from 'vscode';
 import {getActiveFilePath, getProjectRootPath} from 'vscode-extras';
 import {isArray, isObject, isString} from './utils';
-import type {SubstitutionsMap, SubstitutionsOptions} from './types';
+import type {SubstitutionsMap, SubstitutionsEnvMap, SubstitutionsOptions} from './types';
 
 /* MAIN */
 
@@ -93,7 +93,17 @@ const Substitutions = {
     const defaultBuildTask = `${vscode.workspace.getConfiguration ().get ( 'tasks.build' ) || ''}`;
     const pathSeparator = path.sep;
 
+    const env = options?.env;
+    const envMap: SubstitutionsEnvMap = {};
+
+    if ( env ) {
+      for ( const [key, value] of Object.entries ( env ) ) {
+        envMap[`env:${key}`] = value;
+      }
+    }
+
     return {
+      ...envMap,
       userHome,
       workspaceFolder,
       workspaceFolderBasename,
@@ -112,7 +122,7 @@ const Substitutions = {
       execPath,
       defaultBuildTask,
       pathSeparator,
-      '/': pathSeparator
+      '/': pathSeparator,
     };
 
   }
