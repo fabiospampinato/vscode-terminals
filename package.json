@@ -47,6 +47,11 @@
         }
       }
     },
+    "configurationDefaults": {
+      "files.associations": {
+        "terminals.json": "jsonc"
+      }
+    },
     "commands": [
       {
         "command": "terminals.editConfig",
