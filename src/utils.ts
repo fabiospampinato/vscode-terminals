@@ -157,11 +157,11 @@ const getMultiplexerReattachCommand = ( multiplexer: Multiplexer, session: strin
 
   if ( multiplexer === 'screen' ) {
 
-    return `screen -D -R ${session}`;
+    return `exec screen -D -R ${session}`;
 
   } else if ( multiplexer === 'tmux' ) {
 
-    return `tmux attach -t ${session} || tmux new -s ${session}`;
+    return `tmux has-session -t ${session} && exec tmux attach -t ${session} || tmux new -s ${session}`;
 
   } else {
 
