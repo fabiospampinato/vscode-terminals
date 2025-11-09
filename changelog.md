@@ -1,3 +1,6 @@
+### Version 2.1.1
+- Ensuring terminal multiplexers replace the parent shell, avoiding living a dangling shell around when exiting the session
+
 ### Version 2.1.0
 - Ensuring global envs can interoplate process envs, and terminal envs can interpolate global envs, correctly
 - Added support for global-level "shellPath" and "shellArgs" options
