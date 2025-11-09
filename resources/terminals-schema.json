@@ -29,6 +29,14 @@
         "tmux"
       ]
     },
+    "shellPath": {
+      "type": "string",
+      "description": "Path to a custom shell executable"
+    },
+    "shellArgs": {
+      "type": "string",
+      "description": "Arguments to pass to the shell executable"
+    },
     "terminals": {
       "type": "array",
       "description": "Array of terminals to open",

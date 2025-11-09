@@ -44,8 +44,11 @@ The configuration is an object that looks like the following, most properties ar
   // First of all some global options are supported that all terminals defined below will inherit from
   "autorun": true, // Execute terminals automatically at startup or when the project is added to the workspace
   "autokill": true, // Kill all the terminals created from this configuration when the project is removed from the workspace
+
   "env": { "name": "value" }, // Object containing custom environment variables
   "multiplexer": "screen", // The terminal multiplexer that persistent terminals will use, either "screen" or "tmux" are supported
+  "shellPath": '/bin/bash', // Path to a custom shell executable
+  "shellArgs": ["--foo"], // Arguments to pass to the shell executable
 
   // Then we define the actual terminals
   "terminals": [

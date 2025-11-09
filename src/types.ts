@@ -12,9 +12,14 @@ type Env = {
 type Group = {
   autorun: boolean,
   autokill: boolean,
+
+  workspace: string | undefined,
+
   env: Env,
   multiplexer: Multiplexer | undefined,
-  workspace: string | undefined,
+  shellPath: string | undefined,
+  shellArgs: string[],
+
   terminals: Terminal[]
 };
 

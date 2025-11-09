@@ -72,23 +72,25 @@ const getGroupFromUnknown = ( value: unknown, workspace?: string ): Group | unde
   const processEnv = getEnvFromUnknown ( process.env );
 
   const substitutions = Substitutions.getAll ({ workspace, env: processEnv });
-  const substitute = ( value: Env ) => Substitutions.apply ( value, substitutions );
+  const substitute = <T extends string | string[] | Record<string, string>> ( value: T ) => Substitutions.apply ( value, substitutions );
 
   const valueEnv = isObject ( value['env'] ) ? substitute ( getEnvFromUnknown ( value['env'] ) ) : {};
   const env = { ...processEnv, ...valueEnv };
 
   const autorun = isBoolean ( value['autorun'] ) ? value['autorun'] : false;
   const autokill = isBoolean ( value['autokill'] ) ? value['autokill'] : false;
+
   const multiplexer = value['multiplexer'] === 'screen' || value['multiplexer'] === 'tmux' ? value['multiplexer'] : undefined;
-  const group: Group = { autorun, autokill, env, multiplexer, workspace, terminals: [] };
+  const shellPath = isString ( value['shellPath'] ) ? substitute ( untildify ( value['shellPath'] ) ) : undefined;
+  const shellArgs = isArray ( value['shellArgs'] ) && value['shellArgs'].every ( isString ) ? value['shellArgs'].map ( substitute ) : [];
+
+  const group: Group = { autorun, autokill, workspace, env, multiplexer, shellPath, shellArgs, terminals: [] };
   const terminals = isArray ( value['terminals'] ) ? value['terminals'].map ( terminal => getTerminalFromUnknown ( terminal, group ) ).filter ( isTruthy ) : [];
 
   return {
-    autorun,
-    autokill,
-    env,
-    multiplexer,
+    autorun, autokill,
     workspace,
+    env, multiplexer, shellPath, shellArgs,
     terminals
   };
 
@@ -222,8 +224,8 @@ const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | unde
   const onlyMultiple = isBoolean ( value['onlyMultiple'] ) ? value['onlyMultiple'] : false;
 
   const multiplexer = value['multiplexer'] === 'screen' || value['multiplexer'] === 'tmux' ? value['multiplexer'] : group.multiplexer;
-  const shellPath = isString ( value['shellPath'] ) ? substitute ( untildify ( value['shellPath'] ) ) : undefined;
-  const shellArgs = isArray ( value['shellArgs'] ) && value['shellArgs'].every ( isString ) ? value['shellArgs'].map ( substitute ) : [];
+  const shellPath = isString ( value['shellPath'] ) ? substitute ( untildify ( value['shellPath'] ) ) : group.shellPath;
+  const shellArgs = isArray ( value['shellArgs'] ) && value['shellArgs'].every ( isString ) ? value['shellArgs'].map ( substitute ) : group.shellArgs;
 
   const commandsMultiplexer = ( multiplexer && persistent ) ? [getMultiplexerReattachCommand ( multiplexer, persistent )] : [];
   const commandsStandalone = isString ( value['command'] ) ? [value['command']] : [];
