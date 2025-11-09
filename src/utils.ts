@@ -182,7 +182,8 @@ const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | unde
   const substitutionsPartial = Substitutions.get ({ workspace });
   const substitutePartial = <T extends string | string[] | Record<string, string>> ( value: T ) => Substitutions.apply ( value, substitutionsPartial );
 
-  const cwd = isString ( value['cwd'] ) ? untildify ( substitutePartial ( value['cwd'] ) ) : workspace;
+  const cwdRaw = isString ( value['cwd'] ) ? untildify ( substitutePartial ( value['cwd'] ) ) : workspace;
+  const cwd = workspace && cwdRaw ? path.resolve ( workspace, cwdRaw ) : cwdRaw;
   const env = isObject ( value['env'] ) ? substitutePartial ( getEnvFromUnknown ({ ...group.env, ...value['env'] }) ) : substitutePartial ( getEnvFromUnknown ( group['env'] ) );
 
   const substitutions = Substitutions.get ({ workspace, cwd, env });
