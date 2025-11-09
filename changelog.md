@@ -1,3 +1,7 @@
+### Version 2.1.0
+- Ensuring global envs can interoplate process envs, and terminal envs can interpolate global envs, correctly
+- Added support for global-level "shellPath" and "shellArgs" options
+
 ### Version 2.0.3
 - Ensuring process-level environment variables can also be used for variable substitution
 
