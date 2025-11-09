@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import process from 'node:process';
 import JSONC from 'tiny-jsonc';
 import * as vscode from 'vscode';
 import Substitutions from './substitutions';
@@ -184,7 +185,10 @@ const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | unde
 
   const cwdRaw = isString ( value['cwd'] ) ? untildify ( substitutePartial ( value['cwd'] ) ) : workspace;
   const cwd = workspace && cwdRaw ? path.resolve ( workspace, cwdRaw ) : cwdRaw;
-  const env = isObject ( value['env'] ) ? substitutePartial ( getEnvFromUnknown ({ ...group.env, ...value['env'] }) ) : substitutePartial ( getEnvFromUnknown ( group['env'] ) );
+
+  const processEnv = getEnvFromUnknown ( process.env );
+  const valueEnv = isObject ( value['env'] ) ? getEnvFromUnknown ( value['env'] ) : {};
+  const env = substitutePartial ({ ...processEnv, ...group.env, ...valueEnv });
 
   const substitutions = Substitutions.get ({ workspace, cwd, env });
   const substitute = <T extends string | string[] | Record<string, string>> ( value: T ) => Substitutions.apply ( value, substitutions );
