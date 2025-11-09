@@ -1,3 +1,6 @@
+### Version 2.0.2
+- Ensuring a relative cwd is always resolved against the workspace that contains its terminal configuration
+
 ### Version 2.0.1
 - Ensuring the "recycle" option is enabled by default
 - Ensuring existing terminals with the wanted name are reused even if they were opened before the current instance of the extension
