@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import JSONC from 'tiny-jsonc';
+import * as vscode from 'vscode';
 import Substitutions from './substitutions';
 import {getConfig, getProjectRootPath, getProjectRootPaths} from 'vscode-extras';
 import type {Env, Group, Multiplexer, Terminal, TerminalQuickPickItem} from './types';
@@ -160,6 +161,18 @@ const getMultiplexerReattachCommand = ( multiplexer: Multiplexer, session: strin
 
 };
 
+const getTerminalByName = ( name: string ): vscode.Terminal | undefined => {
+
+  return vscode.window.terminals.find ( terminal => {
+
+    if ( !isUndefined ( terminal.exitStatus ) ) return false; // Terminated
+
+    return terminal.name === name;
+
+  });
+
+};
+
 const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | undefined => {
 
   if ( !isObject ( value ) ) return;
@@ -305,6 +318,6 @@ export {getEnvFromUnknown};
 export {getGroupFromUnknown, getGroupQuickPickItems};
 export {getGroups, getGroupsFromInternalConfig, getGroupsFromExternalConfig, getGroupsFromExternalConfigs, getGroupsQuickPickItems};
 export {getMultiplexerReattachCommand};
-export {getTerminalFromUnknown, getTerminalQuickPickItem};
+export {getTerminalByName, getTerminalFromUnknown, getTerminalQuickPickItem};
 export {attempt, delay, isArray, isBoolean, isNil, isNumber, isObject, isString, isTruthy, isUndefined};
 export {untildify};

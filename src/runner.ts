@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import vscode from 'vscode';
-import {delay, isUndefined} from './utils';
+import {delay, getTerminalByName, isUndefined} from './utils';
 import type {Terminal} from './types';
 
 /* HELPERS */
@@ -23,7 +23,7 @@ const Runner = {
     const {env, shellPath, shellArgs} = terminal;
 
     const cacheKey = target || name;
-    const cacheTerm = recycle && ID_TO_INSTANCE.get ( cacheKey );
+    const cacheTerm = recycle && ID_TO_INSTANCE.get ( cacheKey ) || getTerminalByName ( cacheKey );
     const cacheParentTerm = split && ID_TO_INSTANCE.get ( split );
     const location = cacheParentTerm ? { parentTerminal: cacheParentTerm } : undefined;
     const title = dynamicTitle ? undefined : cacheKey;
