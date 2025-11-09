@@ -6,7 +6,7 @@ import path from 'node:path';
 import vscode from 'vscode';
 import {getActiveFilePath, getProjectRootPath} from 'vscode-extras';
 import {isArray, isObject, isString} from './utils';
-import type {SubstitutionsMap, SubstitutionsEnvMap, SubstitutionsOptions} from './types';
+import type {Env, SubstitutionsMap, SubstitutionsEnvMap, SubstitutionsOptions} from './types';
 
 /* MAIN */
 
@@ -69,11 +69,12 @@ const Substitutions = {
 
   },
 
-  get: ( options?: SubstitutionsOptions ): SubstitutionsMap => {
+  getAll: ( options?: SubstitutionsOptions ): SubstitutionsMap => {
 
     const {activeTextEditor} = vscode.window;
     const activeFilePath = getActiveFilePath ();
 
+    const env = Substitutions.getEnv ( options?.env );
     const userHome = os.homedir ();
     const workspaceFolder = options?.workspace ?? getProjectRootPath ( activeFilePath ) ?? '';
     const workspaceFolderBasename = path.basename ( workspaceFolder );
@@ -93,17 +94,8 @@ const Substitutions = {
     const defaultBuildTask = `${vscode.workspace.getConfiguration ().get ( 'tasks.build' ) || ''}`;
     const pathSeparator = path.sep;
 
-    const env = options?.env;
-    const envMap: SubstitutionsEnvMap = {};
-
-    if ( env ) {
-      for ( const [key, value] of Object.entries ( env ) ) {
-        envMap[`env:${key}`] = value;
-      }
-    }
-
     return {
-      ...envMap,
+      ...env,
       userHome,
       workspaceFolder,
       workspaceFolderBasename,
@@ -124,6 +116,24 @@ const Substitutions = {
       pathSeparator,
       '/': pathSeparator,
     };
+
+  },
+
+  getEnv: ( env?: Env ): SubstitutionsEnvMap => {
+
+    const substitutions: SubstitutionsEnvMap = {};
+
+    if ( env ) {
+
+      for ( const [key, value] of Object.entries ( env ) ) {
+
+        substitutions[`env:${key}`] = value;
+
+      }
+
+    }
+
+    return substitutions;
 
   }
 

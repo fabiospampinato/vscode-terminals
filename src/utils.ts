@@ -69,9 +69,16 @@ const getGroupFromUnknown = ( value: unknown, workspace?: string ): Group | unde
 
   if ( !isObject ( value ) ) return;
 
+  const processEnv = getEnvFromUnknown ( process.env );
+
+  const substitutions = Substitutions.getAll ({ workspace, env: processEnv });
+  const substitute = ( value: Env ) => Substitutions.apply ( value, substitutions );
+
+  const valueEnv = isObject ( value['env'] ) ? substitute ( getEnvFromUnknown ( value['env'] ) ) : {};
+  const env = { ...processEnv, ...valueEnv };
+
   const autorun = isBoolean ( value['autorun'] ) ? value['autorun'] : false;
   const autokill = isBoolean ( value['autokill'] ) ? value['autokill'] : false;
-  const env = isObject ( value['env'] ) ? getEnvFromUnknown ( value['env'] ) : {};
   const multiplexer = value['multiplexer'] === 'screen' || value['multiplexer'] === 'tmux' ? value['multiplexer'] : undefined;
   const group: Group = { autorun, autokill, env, multiplexer, workspace, terminals: [] };
   const terminals = isArray ( value['terminals'] ) ? value['terminals'].map ( terminal => getTerminalFromUnknown ( terminal, group ) ).filter ( isTruthy ) : [];
@@ -180,17 +187,16 @@ const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | unde
 
   const workspace = group.workspace;
 
-  const substitutionsPartial = Substitutions.get ({ workspace });
+  const substitutionsPartial = Substitutions.getAll ({ workspace, env: group.env });
   const substitutePartial = <T extends string | string[] | Record<string, string>> ( value: T ) => Substitutions.apply ( value, substitutionsPartial );
 
   const cwdRaw = isString ( value['cwd'] ) ? untildify ( substitutePartial ( value['cwd'] ) ) : workspace;
   const cwd = workspace && cwdRaw ? path.resolve ( workspace, cwdRaw ) : cwdRaw;
 
-  const processEnv = getEnvFromUnknown ( process.env );
-  const valueEnv = isObject ( value['env'] ) ? getEnvFromUnknown ( value['env'] ) : {};
-  const env = substitutePartial ({ ...processEnv, ...group.env, ...valueEnv });
+  const valueEnv = isObject ( value['env'] ) ? substitutePartial ( getEnvFromUnknown ( value['env'] ) ) : {};
+  const env = { ...group.env, ...valueEnv };
 
-  const substitutions = Substitutions.get ({ workspace, cwd, env });
+  const substitutions = Substitutions.getAll ({ workspace, cwd, env });
   const substitute = <T extends string | string[] | Record<string, string>> ( value: T ) => Substitutions.apply ( value, substitutions );
 
   const autorun = isBoolean ( value['autorun'] ) ? value['autorun'] : group.autorun;
