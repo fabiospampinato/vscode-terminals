@@ -1,3 +1,7 @@
+### Version 2.0.1
+- Ensuring the "recycle" option is enabled by default
+- Ensuring existing terminals with the wanted name are reused even if they were opened before the current instance of the extension
+
 ### Version 2.0.0
 - Rewritten: more modern code, no third-party dependencies, 99% smaller bundle
 - Removed donation popup, thank you for your support!
