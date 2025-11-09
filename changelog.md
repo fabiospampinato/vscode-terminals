@@ -1,3 +1,6 @@
+### Version 2.0.3
+- Ensuring process-level environment variables can also be used for variable substitution
+
 ### Version 2.0.2
 - Ensuring a relative cwd is always resolved against the workspace that contains its terminal configuration
 
