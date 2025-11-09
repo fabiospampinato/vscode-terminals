@@ -191,7 +191,7 @@ const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | unde
   const execute = isBoolean ( value['execute'] ) ? value['execute'] : true;
   const focus = isBoolean ( value['focus'] ) ? value['focus'] : false;
   const open = isBoolean ( value['open'] ) ? value['open'] : false;
-  const recycle = isBoolean ( value['recycle'] ) ? value['recycle'] : false;
+  const recycle = isBoolean ( value['recycle'] ) ? value['recycle'] : true;
 
   const onlyAPI = isBoolean ( value['onlyAPI'] ) ? value['onlyAPI'] : false;
   const onlySingle = isBoolean ( value['onlySingle'] ) ? value['onlySingle'] : false;
