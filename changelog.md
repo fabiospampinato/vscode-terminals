@@ -1,3 +1,6 @@
+### Version 2.1.2
+- Ensuring "autorun" works at startup too
+
 ### Version 2.1.1
 - Ensuring terminal multiplexers replace the parent shell, avoiding living a dangling shell around when exiting the session
 
