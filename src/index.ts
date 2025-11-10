@@ -19,6 +19,10 @@ const activate = (): void => {
 
   /* AUTORUN & AUTOKILL */
 
+  vscode.workspace.workspaceFolders?.forEach ( folder => {
+    Commands.autorunTerminalsByWorkspace ( folder.uri.fsPath );
+  });
+
   vscode.workspace.onDidChangeWorkspaceFolders ( ({ added, removed }) => {
     added.forEach ( folder => Commands.autorunTerminalsByWorkspace ( folder.uri.fsPath ) );
     removed.forEach ( folder => Commands.autokillTerminalsByWorkspace ( folder.uri.fsPath ) );
