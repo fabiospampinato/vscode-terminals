@@ -19,9 +19,15 @@ const minimatch = ( pattern: string, filePath: string ): boolean => {
   const normalizedPath = filePath.replace(/\\/g, '/');
   
   // Convert glob pattern to regex
-  const regexPattern = pattern
-    .replace(/\\/g, '/') // Normalize pattern separators too
-    .replace(/\./g, '\\.') // Escape dots
+  // First normalize the pattern
+  let regexPattern = pattern.replace(/\\/g, '/');
+  
+  // Escape all special regex characters except glob wildcards
+  // This prevents regex injection attacks
+  regexPattern = regexPattern.replace(/[.+^${}()|[\]\\]/g, '\\$&');
+  
+  // Now handle glob wildcards
+  regexPattern = regexPattern
     .replace(/\*\*/g, '\x00GLOBSTAR\x00') // Temporarily replace ** with unlikely sequence
     .replace(/\*/g, '[^/]*') // * matches anything except /
     .replace(/\x00GLOBSTAR\x00/g, '.*') // ** matches anything including /
