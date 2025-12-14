@@ -6,10 +6,36 @@ import path from 'node:path';
 import vscode from 'vscode';
 import {alert, openInEditor, prompt} from 'vscode-extras';
 import {DEFAULT_CONFIG} from './constants';
-import {INSTANCE_TO_WORKSPACE} from './runner';
+import {INSTANCE_TO_WORKSPACE, ID_TO_INSTANCE} from './runner';
 import Runner from './runner';
 import {getConfigPath, getGroups, getGroupsFromExternalConfig, getGroupsQuickPickItems} from './utils';
 import type {Terminal, TerminalQuickPickItem} from './types';
+
+/* HELPERS */
+
+const minimatch = ( pattern: string, filePath: string ): boolean => {
+  // Simple glob pattern matching
+  // Normalize path separators to forward slashes for consistent matching
+  const normalizedPath = filePath.replace(/\\/g, '/');
+  
+  // Convert glob pattern to regex
+  // First normalize the pattern
+  let regexPattern = pattern.replace(/\\/g, '/');
+  
+  // Escape all special regex characters except glob wildcards
+  // This prevents regex injection attacks
+  regexPattern = regexPattern.replace(/[.+^${}()|[\]\\]/g, '\\$&');
+  
+  // Now handle glob wildcards
+  regexPattern = regexPattern
+    .replace(/\*\*/g, '\x00GLOBSTAR\x00') // Temporarily replace ** with unlikely sequence
+    .replace(/\*/g, '[^/]*') // * matches anything except /
+    .replace(/\x00GLOBSTAR\x00/g, '.*') // ** matches anything including /
+    .replace(/\?/g, '.'); // ? matches single character
+  
+  const regex = new RegExp(`^${regexPattern}$`);
+  return regex.test(normalizedPath);
+};
 
 /* MAIN */
 
@@ -33,6 +59,41 @@ const autokillTerminalsByWorkspace = async ( workspacePath: string ): Promise<vo
 
     Runner.unrun ( instance );
 
+  }
+
+};
+
+const autoswitchTerminalByFile = async ( filePath: string | undefined ): Promise<void> => {
+
+  if ( !filePath ) return;
+
+  const groups = getGroups ();
+  
+  // Find all terminals with autoswitch patterns
+  const terminals = groups.flatMap ( group => group.terminals );
+  
+  // Find the first terminal with a matching autoswitch pattern
+  for ( const terminal of terminals ) {
+    
+    if ( !terminal.autoswitch ) continue;
+    
+    // Check if the file path matches the autoswitch pattern
+    if ( minimatch ( terminal.autoswitch, filePath ) ) {
+      
+      // Check if the terminal is already running
+      const instance = ID_TO_INSTANCE.get ( terminal.name );
+      
+      if ( instance ) {
+        
+        // Switch to the terminal (show it without focusing)
+        // instance.show(preserveFocus: true) - shows terminal but keeps editor focus
+        instance.show ( true );
+        break; // Only switch to the first matching terminal
+        
+      }
+      
+    }
+    
   }
 
 };
@@ -140,7 +201,7 @@ const runTerminalsItems = async ( items: TerminalQuickPickItem[] ): Promise<void
 
 /* EXPORT */
 
-export {autorunTerminalsByWorkspace, autokillTerminalsByWorkspace};
+export {autorunTerminalsByWorkspace, autokillTerminalsByWorkspace, autoswitchTerminalByFile};
 export {editConfig, initConfig};
 export {kill};
 export {runTerminal, runTerminalByName, runTerminals, runTerminalsItems};

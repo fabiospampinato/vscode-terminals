@@ -223,6 +223,8 @@ const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | unde
   const onlySingle = isBoolean ( value['onlySingle'] ) ? value['onlySingle'] : false;
   const onlyMultiple = isBoolean ( value['onlyMultiple'] ) ? value['onlyMultiple'] : false;
 
+  const autoswitch = isString ( value['autoswitch'] ) ? value['autoswitch'] : undefined;
+
   const multiplexer = value['multiplexer'] === 'screen' || value['multiplexer'] === 'tmux' ? value['multiplexer'] : group.multiplexer;
   const shellPath = isString ( value['shellPath'] ) ? substitute ( untildify ( value['shellPath'] ) ) : group.shellPath;
   const shellArgs = isArray ( value['shellArgs'] ) && value['shellArgs'].every ( isString ) ? value['shellArgs'].map ( substitute ) : group.shellArgs;
@@ -241,6 +243,7 @@ const getTerminalFromUnknown = ( value: unknown, group: Group ): Terminal | unde
     persistent, split, target,
     dynamicTitle, recycle, open, focus, execute,
     onlyAPI, onlySingle, onlyMultiple,
+    autoswitch,
     env, multiplexer, shellPath, shellArgs
   };
 

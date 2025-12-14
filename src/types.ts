@@ -95,6 +95,8 @@ type Terminal = {
   onlySingle: boolean,
   onlyMultiple: boolean,
 
+  autoswitch: string | undefined,
+
   env: Env,
   multiplexer: Multiplexer | undefined,
   shellPath: string | undefined,
