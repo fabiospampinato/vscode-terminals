@@ -13,18 +13,22 @@ import type {Terminal, TerminalQuickPickItem} from './types';
 
 /* HELPERS */
 
-const minimatch = ( pattern: string, path: string ): boolean => {
+const minimatch = ( pattern: string, filePath: string ): boolean => {
   // Simple glob pattern matching
+  // Normalize path separators to forward slashes for consistent matching
+  const normalizedPath = filePath.replace(/\\/g, '/');
+  
   // Convert glob pattern to regex
   const regexPattern = pattern
-    .replace(/\./g, '\\.')
-    .replace(/\*\*/g, '____DOUBLESTAR____')
-    .replace(/\*/g, '[^/]*')
-    .replace(/____DOUBLESTAR____/g, '.*')
-    .replace(/\?/g, '.');
+    .replace(/\\/g, '/') // Normalize pattern separators too
+    .replace(/\./g, '\\.') // Escape dots
+    .replace(/\*\*/g, '____DOUBLESTAR____') // Temporarily replace **
+    .replace(/\*/g, '[^/]*') // * matches anything except /
+    .replace(/____DOUBLESTAR____/g, '.*') // ** matches anything including /
+    .replace(/\?/g, '.'); // ? matches single character
   
   const regex = new RegExp(`^${regexPattern}$`);
-  return regex.test(path);
+  return regex.test(normalizedPath);
 };
 
 /* MAIN */
