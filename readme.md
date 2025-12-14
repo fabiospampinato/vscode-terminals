@@ -82,6 +82,8 @@ The configuration is an object that looks like the following, most properties ar
       "onlySingle": true, // Don't run this with the "Terminals: Run" command
       "onlyMultiple": true, // Hide it from the "Terminals: Run Single" command
 
+      "autoswitch": "**/myLibrary/**", // Automatically switch to this terminal when a file matching this glob pattern is opened
+
       "env": { "name": "value" }, // Object containing additional environment variables that will be applied to this terminal
       "multiplexer": "tmux", // The terminal multiplexer that this terminal will use, if persistent
       "shellPath": '/bin/bash', // Path to a custom shell executable
@@ -94,6 +96,7 @@ The configuration is an object that looks like the following, most properties ar
 ## Details
 
 - **Autorun/Autokill**: these features allow the extension to automatically run and kill terminals so that you don't have to explicitly run any command to set a project up after opening it, just opening it will be enough. It's an optional feature that you may not need at all, but that may be convenient to you.
+- **Autoswitch**: this feature allows terminals to automatically become active when you open a file that matches a glob pattern. This is useful in monorepos or multi-root workspaces where different terminals are associated with different parts of the codebase. When you open a file, the extension will check if any terminal has an `autoswitch` pattern that matches the file path, and if so, it will show that terminal (only if it's already running). This mirrors the Source Control panel's behavior where selecting files changes what Git repository you're working with.
 - **Global-level terminals**: you can also define additional global-level terminals in your VSCode settings files, that will be available in every project, using the same exact configuration format, but basically prefixing every top-level key with `terminals.`, so `terminals.autorun`, `termunals.terminals` etc., the rest stays unchanged.
 - **Multiplexer-level persistence**: a basic form of multiplexer-based persistance is supported, via either [GNU Screen](https://en.wikipedia.org/wiki/GNU_Screen) or [tmux](https://en.wikipedia.org/wiki/Tmux), which will persist terminals even if you close vscode, and it will reattach to them when you reopen vscode. For it to work you need to respectively have the `screen` or `tmux` commands already installed in your system.
 - **Native-level persistence**: VSCode supports persisting terminals nativelly. To avoid conflicts this feature is automatically disabled for terminals created by this extension, and you might want to disable it globally as well, by setting the `terminal.integrated.persistentSessionReviveProcess` setting to `never`.

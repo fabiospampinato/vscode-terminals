@@ -6,10 +6,26 @@ import path from 'node:path';
 import vscode from 'vscode';
 import {alert, openInEditor, prompt} from 'vscode-extras';
 import {DEFAULT_CONFIG} from './constants';
-import {INSTANCE_TO_WORKSPACE} from './runner';
+import {INSTANCE_TO_WORKSPACE, ID_TO_INSTANCE} from './runner';
 import Runner from './runner';
 import {getConfigPath, getGroups, getGroupsFromExternalConfig, getGroupsQuickPickItems} from './utils';
 import type {Terminal, TerminalQuickPickItem} from './types';
+
+/* HELPERS */
+
+const minimatch = ( pattern: string, path: string ): boolean => {
+  // Simple glob pattern matching
+  // Convert glob pattern to regex
+  const regexPattern = pattern
+    .replace(/\./g, '\\.')
+    .replace(/\*\*/g, '____DOUBLESTAR____')
+    .replace(/\*/g, '[^/]*')
+    .replace(/____DOUBLESTAR____/g, '.*')
+    .replace(/\?/g, '.');
+  
+  const regex = new RegExp(`^${regexPattern}$`);
+  return regex.test(path);
+};
 
 /* MAIN */
 
@@ -33,6 +49,40 @@ const autokillTerminalsByWorkspace = async ( workspacePath: string ): Promise<vo
 
     Runner.unrun ( instance );
 
+  }
+
+};
+
+const autoswitchTerminalByFile = async ( filePath: string | undefined ): Promise<void> => {
+
+  if ( !filePath ) return;
+
+  const groups = getGroups ();
+  
+  // Find all terminals with autoswitch patterns
+  const terminals = groups.flatMap ( group => group.terminals );
+  
+  // Find the first terminal with a matching autoswitch pattern
+  for ( const terminal of terminals ) {
+    
+    if ( !terminal.autoswitch ) continue;
+    
+    // Check if the file path matches the autoswitch pattern
+    if ( minimatch ( terminal.autoswitch, filePath ) ) {
+      
+      // Check if the terminal is already running
+      const instance = ID_TO_INSTANCE.get ( terminal.name );
+      
+      if ( instance ) {
+        
+        // Switch to the terminal (show it without focusing)
+        instance.show ( true );
+        break; // Only switch to the first matching terminal
+        
+      }
+      
+    }
+    
   }
 
 };
@@ -140,7 +190,7 @@ const runTerminalsItems = async ( items: TerminalQuickPickItem[] ): Promise<void
 
 /* EXPORT */
 
-export {autorunTerminalsByWorkspace, autokillTerminalsByWorkspace};
+export {autorunTerminalsByWorkspace, autokillTerminalsByWorkspace, autoswitchTerminalByFile};
 export {editConfig, initConfig};
 export {kill};
 export {runTerminal, runTerminalByName, runTerminals, runTerminalsItems};

@@ -142,6 +142,10 @@
                 "type": "boolean",
                 "description": "Hide it from the \"Terminals: Run Single\" command"
               },
+              "autoswitch": {
+                "type": "string",
+                "description": "Glob pattern to match against open file paths. When a matching file is opened, this terminal will be automatically shown"
+              },
               "env": {
                 "type": "object",
                 "description": "Object containing additional environment variables that will be applied to this terminal",

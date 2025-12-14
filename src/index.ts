@@ -28,6 +28,13 @@ const activate = (): void => {
     removed.forEach ( folder => Commands.autokillTerminalsByWorkspace ( folder.uri.fsPath ) );
   });
 
+  /* AUTOSWITCH */
+
+  vscode.window.onDidChangeActiveTextEditor ( editor => {
+    const filePath = editor?.document?.uri?.fsPath;
+    Commands.autoswitchTerminalByFile ( filePath );
+  });
+
   /* CLEANUP */
 
   vscode.window.onDidCloseTerminal ( Runner.unrun );
