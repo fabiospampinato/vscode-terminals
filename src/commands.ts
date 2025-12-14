@@ -22,9 +22,9 @@ const minimatch = ( pattern: string, filePath: string ): boolean => {
   const regexPattern = pattern
     .replace(/\\/g, '/') // Normalize pattern separators too
     .replace(/\./g, '\\.') // Escape dots
-    .replace(/\*\*/g, '____DOUBLESTAR____') // Temporarily replace **
+    .replace(/\*\*/g, '\x00GLOBSTAR\x00') // Temporarily replace ** with unlikely sequence
     .replace(/\*/g, '[^/]*') // * matches anything except /
-    .replace(/____DOUBLESTAR____/g, '.*') // ** matches anything including /
+    .replace(/\x00GLOBSTAR\x00/g, '.*') // ** matches anything including /
     .replace(/\?/g, '.'); // ? matches single character
   
   const regex = new RegExp(`^${regexPattern}$`);
@@ -80,6 +80,7 @@ const autoswitchTerminalByFile = async ( filePath: string | undefined ): Promise
       if ( instance ) {
         
         // Switch to the terminal (show it without focusing)
+        // instance.show(preserveFocus: true) - shows terminal but keeps editor focus
         instance.show ( true );
         break; // Only switch to the first matching terminal
         
