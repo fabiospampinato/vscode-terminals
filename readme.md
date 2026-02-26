@@ -1,4 +1,4 @@
-# Terminals Manager
+#hazem19952025 # Terminals Manager
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/fabiospampinato/vscode-terminals/master/resources/logo.png" width="128" alt="Logo">
