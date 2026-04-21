@@ -8,14 +8,16 @@ import {alert, openInEditor, prompt} from 'vscode-extras';
 import {DEFAULT_CONFIG} from './constants';
 import {INSTANCE_TO_WORKSPACE} from './runner';
 import Runner from './runner';
-import {getConfigPath, getGroups, getGroupsFromExternalConfig, getGroupsQuickPickItems} from './utils';
+import {getConfigPath, getGroups, getGroupsFromInternalConfig, getGroupsFromExternalConfig, getGroupsQuickPickItems} from './utils';
 import type {Terminal, TerminalQuickPickItem} from './types';
 
 /* MAIN */
 
 const autorunTerminalsByWorkspace = async ( workspacePath: string ): Promise<void> => {
 
-  const groups = getGroupsFromExternalConfig ( workspacePath );
+  const internalGroups = getGroupsFromInternalConfig ();
+  const externalGroups = getGroupsFromExternalConfig ( workspacePath );
+  const groups = [...internalGroups, ...externalGroups];
   const filterer = ( terminal: Terminal ): boolean => terminal.autorun && !terminal.onlyAPI && !terminal.onlySingle;
   const items = getGroupsQuickPickItems ( groups, filterer );
 
