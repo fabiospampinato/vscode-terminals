@@ -100,7 +100,7 @@
               },
               "persistent": {
                 "type": "string",
-                "description": "Keep the process running even when closing the terminal and reuse it, preservig the output. This unique session name will be passed to the terminal multiplexer"
+                "description": "Keep the process running even when closing the terminal and reuse it, preserving the output. This unique session name will be passed to the terminal multiplexer"
               },
               "split": {
                 "type": "string",

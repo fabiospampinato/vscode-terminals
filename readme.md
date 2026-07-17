@@ -68,7 +68,7 @@ The configuration is an object that looks like the following, most properties ar
         "touch my_heart"
       ],
 
-      "persistent": "unique_session_name", // Keep the process running even when closing the terminal and reuse it, preservig the output. This unique session name will be passed to the terminal multiplexer
+      "persistent": "unique_session_name", // Keep the process running even when closing the terminal and reuse it, preserving the output. This unique session name will be passed to the terminal multiplexer
       "split": "My Parent Terminal", // The name of the other (open) terminal to split from
       "target": "My Other Terminal",// Execute the commands in this terminal's instance
 
