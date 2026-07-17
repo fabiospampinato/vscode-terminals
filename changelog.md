@@ -92,7 +92,7 @@
 - CWD: added support for paths starting with a tilde (~)
 
 ### Version 1.11.7
-- Variable substituion: ensuring all instance of each token get replaced
+- Variable substitution: ensuring all instance of each token get replaced
 
 ### Version 1.11.6
 - Ensuring the configuration gets opened as a non-preview editor
